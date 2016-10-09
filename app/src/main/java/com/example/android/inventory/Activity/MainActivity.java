@@ -1,11 +1,14 @@
 package com.example.android.inventory.Activity;
 
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.example.android.inventory.Adapter.InventoryCursorAdapter;
@@ -57,5 +60,33 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mInventoryCursorAdapter.swapCursor(null);
+    }
+
+
+    private void insertDummyData() {
+        ContentValues values = new ContentValues();
+        values.put(InventoryEntry.NAME, "Thing");
+        values.put(InventoryEntry.QUANTITY, 1);
+        values.put(InventoryEntry.PRICE, 100);
+        values.put(InventoryEntry.DESCRIPTION, "A thing that does stuff");
+        values.put(InventoryEntry.SUPPLIER, "Dude on the corner");
+
+        getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_insert_dummy_data:
+                insertDummyData();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
