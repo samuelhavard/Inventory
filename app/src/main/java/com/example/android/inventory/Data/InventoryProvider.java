@@ -1,6 +1,7 @@
 package com.example.android.inventory.Data;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -9,8 +10,6 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 
 import com.example.android.inventory.Data.InventoryContract.InventoryEntry;
-
-import static android.provider.CalendarContract.CalendarCache.URI;
 
 /**
  * Created by samue_000 on 10/9/2016.
@@ -78,7 +77,7 @@ public class InventoryProvider extends ContentProvider {
     @Override
     public String getType(Uri uri) {
         final int match = sUriMatcher.match(uri);
-        switch (match){
+        switch (match) {
             case INVENTORY:
                 return InventoryEntry.CONTENT_LIST_TYPE;
             case INVENTORY_ID:
@@ -91,12 +90,82 @@ public class InventoryProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues contentValues) {
-        return null;
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case INVENTORY:
+                return insertInventory(uri, contentValues);
+            default:
+                throw new IllegalArgumentException("Insertion is not supported for " + uri);
+        }
+    }
+
+    private Uri insertInventory(Uri uri, ContentValues values) {
+
+        if (values.containsKey(InventoryEntry.NAME)) {
+            String name = values.getAsString(InventoryEntry.NAME);
+            if (name == null) {
+                throw new IllegalArgumentException("Item requires a name");
+            }
+        }
+
+        if (values.containsKey(InventoryEntry.QUANTITY)) {
+            Integer quantity = values.getAsInteger(InventoryEntry.QUANTITY);
+            if (quantity != null && quantity < 0) {
+                throw new IllegalArgumentException("Item requires a valid quantity");
+            }
+        }
+
+        if (values.containsKey(InventoryEntry.PRICE)) {
+            Integer price = values.getAsInteger(InventoryEntry.PRICE);
+            if (price != null && price < 0) {
+                throw new IllegalArgumentException("Item requires a valid price");
+            }
+        }
+
+        if (values.containsKey(InventoryEntry.DESCRIPTION)) {
+            String description = values.getAsString(InventoryEntry.DESCRIPTION);
+            if (description == null) {
+                throw new IllegalArgumentException("Item requires a valid description");
+            }
+        }
+
+        if (values.containsKey(InventoryEntry.SUPPLIER)) {
+            String supplier = values.getAsString(InventoryEntry.SUPPLIER);
+            if (supplier == null) {
+                throw new IllegalArgumentException("Item requires a valid supplier");
+            }
+        }
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+        long id = database.insert(InventoryEntry.TABLE_NAME, null, values);
+
+        if (id == -1) {
+            return null;
+        }
+
+        getContext().getContentResolver().notifyChange(uri, null);
+        return ContentUris.withAppendedId(uri, id);
     }
 
     @Override
-    public int delete(Uri uri, String s, String[] strings) {
-        return 0;
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+        final  int match = sUriMatcher.match(uri);
+        int rowsDeleted;
+
+        switch (match) {
+            case INVENTORY:
+                rowsDeleted = database.delete(InventoryEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case INVENTORY_ID:
+                selection = InventoryEntry._ID + "=?";
+                selectionArgs = new String[] {String.valueOf(ContentUris.parseId(uri))};
+                rowsDeleted = database.delete(InventoryEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Deletion is not supported for " + uri);
+        }
+        return rowsDeleted;
     }
 
     @Override
