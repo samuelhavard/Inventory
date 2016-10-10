@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -13,6 +14,7 @@ import android.widget.ListView;
 
 import com.example.android.inventory.Adapter.InventoryCursorAdapter;
 import com.example.android.inventory.Data.InventoryContract.InventoryEntry;
+import com.example.android.inventory.Data.InventoryDbHelper;
 import com.example.android.inventory.R;
 
 public class MainActivity extends AppCompatActivity

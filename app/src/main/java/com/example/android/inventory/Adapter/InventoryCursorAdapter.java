@@ -33,11 +33,11 @@ public class InventoryCursorAdapter extends CursorAdapter {
         TextView quantityTextView = (TextView) view.findViewById(R.id.quantity);
 
         String name = cursor.getString(cursor.getColumnIndexOrThrow(InventoryEntry.NAME));
-        int price = cursor.getInt(cursor.getColumnIndexOrThrow(InventoryEntry.PRICE));
-        int quantity = cursor.getInt(cursor.getColumnIndexOrThrow(InventoryEntry.QUANTITY));
+        Integer price = cursor.getInt(cursor.getColumnIndexOrThrow(InventoryEntry.PRICE));
+        Integer quantity = cursor.getInt(cursor.getColumnIndexOrThrow(InventoryEntry.QUANTITY));
 
         nameTextView.setText(name);
-        priceTextView.setText(price);
-        quantityTextView.setText(quantity);
+        priceTextView.setText(price.toString());
+        quantityTextView.setText(quantity.toString());
     }
 }
