@@ -169,7 +169,65 @@ public class InventoryProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues contentValues, String s, String[] strings) {
-        return 0;
+    public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
+        final int matcher = sUriMatcher.match(uri);
+        switch (matcher) {
+            case INVENTORY:
+                return updateInventory(uri, contentValues, selection, selectionArgs);
+            case INVENTORY_ID:
+                selection = InventoryEntry._ID + "=?";
+                selectionArgs = new String[] {String.valueOf(ContentUris.parseId(uri))};
+                return updateInventory(uri, contentValues, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Update is not supported for " + uri);
+        }
+    }
+
+    private int updateInventory (Uri uri, ContentValues contentValues, String selection,
+                                 String[] selectionArgs) {
+        if (contentValues.containsKey(InventoryEntry.NAME)) {
+            String name = contentValues.getAsString(InventoryEntry.NAME);
+            if (name == null) {
+                throw new IllegalArgumentException("Item requires a name");
+            }
+        }
+
+        if (contentValues.containsKey(InventoryEntry.QUANTITY)) {
+            Integer quantity = contentValues.getAsInteger(InventoryEntry.QUANTITY);
+            if (quantity != null && quantity < 0) {
+                throw new IllegalArgumentException("Item requires a quantity");
+            }
+        }
+
+        if (contentValues.containsKey(InventoryEntry.PRICE)) {
+            Integer price = contentValues.getAsInteger(InventoryEntry.PRICE);
+            if (price != null && price < 0) {
+                throw new IllegalArgumentException("Item requires a price");
+            }
+        }
+
+        if (contentValues.containsKey(InventoryEntry.DESCRIPTION)) {
+            String description = contentValues.getAsString(InventoryEntry.DESCRIPTION);
+            if (description == null) {
+                throw new IllegalArgumentException("Item requires a description");
+            }
+        }
+
+        if (contentValues.containsKey(InventoryEntry.SUPPLIER)) {
+            String supplier = contentValues.getAsString(InventoryEntry.SUPPLIER);
+            if (supplier == null) {
+                throw new IllegalArgumentException("Item needs a supplier.");
+            }
+        }
+
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+        int rowsUpdated = database.update(InventoryEntry.TABLE_NAME, contentValues, selection,
+                selectionArgs);
+
+        if (rowsUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowsUpdated;
     }
 }

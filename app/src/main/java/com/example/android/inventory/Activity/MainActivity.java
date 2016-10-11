@@ -1,20 +1,23 @@
 package com.example.android.inventory.Activity;
 
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.android.inventory.Adapter.InventoryCursorAdapter;
 import com.example.android.inventory.Data.InventoryContract.InventoryEntry;
-import com.example.android.inventory.Data.InventoryDbHelper;
 import com.example.android.inventory.R;
 
 public class MainActivity extends AppCompatActivity
@@ -33,6 +36,16 @@ public class MainActivity extends AppCompatActivity
         inventoryListView.setAdapter(mInventoryCursorAdapter);
 
         getLoaderManager().initLoader(URL_LOADER, null, this);
+
+        inventoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                Uri selectedUri = ContentUris.withAppendedId(InventoryEntry.CONTENT_URI, id);
+                intent.setData(selectedUri);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
