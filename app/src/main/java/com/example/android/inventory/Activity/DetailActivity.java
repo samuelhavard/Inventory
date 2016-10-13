@@ -1,16 +1,21 @@
 package com.example.android.inventory.Activity;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.android.inventory.Data.InventoryContract.InventoryEntry;
 import com.example.android.inventory.R;
@@ -56,6 +61,25 @@ public class DetailActivity extends AppCompatActivity implements
         mQuantityEditText = (EditText) findViewById(R.id.item_quantity);
 
         getLoaderManager().initLoader(INVENTORY_LOADER, null, this);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_details, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_save:
+                break;
+            case R.id.action_delete:
+                showDeleteConfirmationDialog();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -113,5 +137,35 @@ public class DetailActivity extends AppCompatActivity implements
         mSupplierEditText.setText("");
         mPriceEditText.setText("");
         mQuantityEditText.setText("");
+    }
+
+    private void showDeleteConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Delete this item?");
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                deleteItem();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (dialogInterface != null) {
+                    dialogInterface.dismiss();
+                }
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void deleteItem() {
+        int rowDeleted = getContentResolver().delete(mCurrentItemUri, null, null);
+        if (rowDeleted > 0) {
+            Toast toast = Toast.makeText(this, "Item Deleted", Toast.LENGTH_LONG);
+            toast.show();
+            finish();
+        }
     }
 }
