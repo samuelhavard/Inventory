@@ -2,6 +2,7 @@ package com.example.android.inventory.Activity;
 
 import android.app.AlertDialog;
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Loader;
@@ -60,9 +61,13 @@ public class DetailActivity extends AppCompatActivity implements
         mPriceEditText = (EditText) findViewById(R.id.item_price);
         mQuantityEditText = (EditText) findViewById(R.id.item_quantity);
 
-        getLoaderManager().initLoader(INVENTORY_LOADER, null, this);
+        if (mCurrentItemUri == null) {
+            setTitle("Add an Item");
+            invalidateOptionsMenu();
+        } else {
+            getLoaderManager().initLoader(INVENTORY_LOADER, null, this);
+        }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -80,6 +85,16 @@ public class DetailActivity extends AppCompatActivity implements
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if (mCurrentItemUri == null) {
+            MenuItem menuItem = menu.findItem(R.id.action_delete);
+            menuItem.setVisible(false);
+        }
+        return true;
     }
 
     @Override
@@ -166,6 +181,32 @@ public class DetailActivity extends AppCompatActivity implements
             Toast toast = Toast.makeText(this, "Item Deleted", Toast.LENGTH_LONG);
             toast.show();
             finish();
+        }
+    }
+
+    private void insertItem() {
+
+        String nameString = mNameEditText.getText().toString().trim();
+        String quantityString = mQuantityEditText.toString().trim();
+        int quantity = Integer.parseInt(quantityString);
+        String priceString = mPriceEditText.getText().toString().trim();
+        int price = Integer.parseInt(priceString);
+        String descriptionString = mDescriptionEditText.toString().trim();
+        String supplierString = mSupplierEditText.toString().trim();
+
+        ContentValues values = new ContentValues();
+        values.put(InventoryEntry.NAME, nameString);
+        values.put(InventoryEntry.QUANTITY, quantity);
+        values.put(InventoryEntry.PRICE, price);
+        values.put(InventoryEntry.DESCRIPTION, descriptionString);
+        values.put(InventoryEntry.SUPPLIER, supplierString);
+
+        Uri newUri = getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
+
+        if (newUri == null) {
+            Toast.makeText(this, "Error saving item", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Item Saved", Toast.LENGTH_LONG).show();
         }
     }
 }
