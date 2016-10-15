@@ -1,9 +1,11 @@
 package com.example.android.inventory.Activity;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -15,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.android.inventory.Adapter.InventoryCursorAdapter;
 import com.example.android.inventory.Data.InventoryContract.InventoryEntry;
@@ -104,6 +107,9 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_insert_dummy_data:
                 insertDummyData();
                 return true;
+            case R.id.action_delete_all_items:
+                showDeleteConfirmationDialog();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -111,5 +117,33 @@ public class MainActivity extends AppCompatActivity
     private void newItem () {
         Intent intent = new Intent(this, DetailActivity.class);
         startActivity(intent);
+    }
+
+    private void showDeleteConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Delete All Items?");
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                deleteItem();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (dialogInterface != null) {
+                    dialogInterface.dismiss();
+                }
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void deleteItem() {
+        int rowsDeleted = getContentResolver().delete(InventoryEntry.CONTENT_URI, null, null);
+        if (rowsDeleted > 0) {
+            Toast.makeText(this, "All Items Deleted", Toast.LENGTH_LONG).show();
+        }
     }
 }
