@@ -98,10 +98,18 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
+            case R.id.action_add_new_item:
+                newItem();
+                return true;
             case R.id.action_insert_dummy_data:
                 insertDummyData();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void newItem () {
+        Intent intent = new Intent(this, DetailActivity.class);
+        startActivity(intent);
     }
 }

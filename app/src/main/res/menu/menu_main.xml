@@ -5,6 +5,11 @@
     tools:context=".Activity.CatalogActivity">
 
     <item
+        android:id="@+id/action_add_new_item"
+        android:title="Insert New Item"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_insert_dummy_data"
         android:title="insert dummy data"
         app:showAsAction="never" />

@@ -79,6 +79,8 @@ public class DetailActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
+                insertItem();
+                finish();
                 break;
             case R.id.action_delete:
                 showDeleteConfirmationDialog();
@@ -187,12 +189,12 @@ public class DetailActivity extends AppCompatActivity implements
     private void insertItem() {
 
         String nameString = mNameEditText.getText().toString().trim();
-        String quantityString = mQuantityEditText.toString().trim();
+        String quantityString = mQuantityEditText.getText().toString().trim();
         int quantity = Integer.parseInt(quantityString);
         String priceString = mPriceEditText.getText().toString().trim();
         int price = Integer.parseInt(priceString);
-        String descriptionString = mDescriptionEditText.toString().trim();
-        String supplierString = mSupplierEditText.toString().trim();
+        String descriptionString = mDescriptionEditText.getText().toString().trim();
+        String supplierString = mSupplierEditText.getText().toString().trim();
 
         ContentValues values = new ContentValues();
         values.put(InventoryEntry.NAME, nameString);
