@@ -10,10 +10,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -24,7 +21,7 @@ import com.example.android.inventory.Data.InventoryContract.InventoryEntry;
 import com.example.android.inventory.R;
 
 /**
- * Created by samue_000 on 10/10/2016.
+ *
  */
 
 public class DetailActivity extends AppCompatActivity implements
@@ -50,13 +47,8 @@ public class DetailActivity extends AppCompatActivity implements
     private EditText mPriceEditText;
     private EditText mQuantityEditText;
 
-    private Button mDelete;
-    private Button mSave;
-    private Button mSale;
-    private Button mShipment;
-
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail_activity_layout);
 
@@ -68,13 +60,13 @@ public class DetailActivity extends AppCompatActivity implements
         mPriceEditText = (EditText) findViewById(R.id.item_price);
         mQuantityEditText = (EditText) findViewById(R.id.item_quantity);
 
-        mDelete = (Button) findViewById(R.id.button_delete);
-        mSave = (Button) findViewById(R.id.button_save);
-        mSale = (Button) findViewById(R.id.button_sale);
-        mShipment = (Button) findViewById(R.id.button_shipment);
+        Button mDelete = (Button) findViewById(R.id.button_delete);
+        Button mSave = (Button) findViewById(R.id.button_save);
+        Button mSale = (Button) findViewById(R.id.button_sale);
+        Button mShipment = (Button) findViewById(R.id.button_shipment);
 
         if (mCurrentItemUri == null) {
-            setTitle("Add an Item");
+            setTitle(getString(R.string.add_item));
             invalidateOptionsMenu();
             mSave.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -117,39 +109,8 @@ public class DetailActivity extends AppCompatActivity implements
 
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_details, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.action_save:
-//                insertItem();
-//                finish();
-//                break;
-//            case R.id.action_delete:
-//                showDeleteConfirmationDialog();
-//                return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-//
-//    @Override
-//    public boolean onPrepareOptionsMenu(Menu menu) {
-//        super.onPrepareOptionsMenu(menu);
-//        if (mCurrentItemUri == null) {
-//            MenuItem menuItem = menu.findItem(R.id.action_delete);
-//            menuItem.setVisible(false);
-//        }
-//        return true;
-//    }
-
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-
         String[] projection = {
                 InventoryEntry._ID,
                 InventoryEntry.NAME,
@@ -169,7 +130,6 @@ public class DetailActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-
         if (cursor == null || cursor.getCount() < 1) {
             return;
         }
@@ -190,8 +150,8 @@ public class DetailActivity extends AppCompatActivity implements
             mNameEditText.setText(name);
             mDescriptionEditText.setText(description);
             mSupplierEditText.setText(supplier);
-            mPriceEditText.setText(Integer.toString(itemPrice));
-            mQuantityEditText.setText(Integer.toString(itemQuantity));
+            mPriceEditText.setText(getString(R.string.price_message, itemPrice));
+            mQuantityEditText.setText(getString(R.string.quantity_message, itemQuantity));
         }
     }
 
@@ -206,14 +166,14 @@ public class DetailActivity extends AppCompatActivity implements
 
     private void showDeleteConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Delete this item?");
-        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.delete_question);
+        builder.setPositiveButton(R.string.delete_option, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 deleteItem();
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel_option, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (dialogInterface != null) {
@@ -228,14 +188,13 @@ public class DetailActivity extends AppCompatActivity implements
     private void deleteItem() {
         int rowDeleted = getContentResolver().delete(mCurrentItemUri, null, null);
         if (rowDeleted > 0) {
-            Toast toast = Toast.makeText(this, "Item Deleted", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(this, R.string.item_deleted, Toast.LENGTH_LONG);
             toast.show();
             finish();
         }
     }
 
     private void insertItem() {
-
         String nameString = mNameEditText.getText().toString().trim();
         String quantityString = mQuantityEditText.getText().toString().trim();
         int quantity = Integer.parseInt(quantityString);
@@ -254,9 +213,9 @@ public class DetailActivity extends AppCompatActivity implements
         Uri newUri = getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
 
         if (newUri == null) {
-            Toast.makeText(this, "Error saving item", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.error_saving_item, Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(this, "Item Saved", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.item_saved, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -286,37 +245,35 @@ public class DetailActivity extends AppCompatActivity implements
                 selectionArgs);
 
         if (updatedRows < 0) {
-            Toast.makeText(this, "Update Not completed", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.update_not_completed, Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(this, "Update Completed", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.update_completed, Toast.LENGTH_LONG).show();
         }
     }
 
     private void quantityMinus() {
-
         if (mQuantityEditText.getText().toString().isEmpty()) {
-            mQuantityEditText.setText(0 + "");
+            mQuantityEditText.setText(getString(R.string.quantity_message, 0));
         } else {
             String stringQuantity = mQuantityEditText.getText().toString().trim();
             int quantity = Integer.parseInt(stringQuantity);
             if (quantity > 0) {
                 quantity--;
-                mQuantityEditText.setText(quantity + "");
+                mQuantityEditText.setText(getString(R.string.quantity_message, quantity));
             } else {
-                Toast.makeText(this, "Quantity cannot be below 0", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.quantity_below_zero, Toast.LENGTH_LONG).show();
             }
         }
     }
 
     private void quantityPlus() {
-
         if (mQuantityEditText.getText().toString().isEmpty()) {
-            mQuantityEditText.setText(0 + "");
+            mQuantityEditText.setText(getString(R.string.quantity_message, 0));
         } else {
             String stringQuantity = mQuantityEditText.getText().toString().trim();
             int quantity = Integer.parseInt(stringQuantity);
             quantity++;
-            mQuantityEditText.setText(quantity + "");
+            mQuantityEditText.setText(getString(R.string.quantity_message, quantity));
         }
     }
 }
