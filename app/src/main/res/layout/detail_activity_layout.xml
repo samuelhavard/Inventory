@@ -85,15 +85,24 @@
             android:id="@+id/item_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:hint="Item Price" />
+            android:hint="Item Price"
+            android:inputType="number" />
     </LinearLayout>
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/quantity_text_view"
+        style="@style/detail_style"
         android:layout_width="match_parent"
-        style="@style/layout_style"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/price_view"
+        android:layout_below="@id/price_view"
+        android:gravity="center"
+        android:text="Quantity: " />
+
+    <LinearLayout
+        style="@style/layout_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/quantity_text_view"
         android:orientation="horizontal">
 
         <Button
@@ -122,16 +131,16 @@
     </LinearLayout>
 
     <Button
-        style="@style/layout_style"
         android:id="@+id/button_save"
+        style="@style/layout_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/button_delete"
         android:text="Save Item" />
 
     <Button
-        style="@style/layout_style"
         android:id="@+id/button_delete"
+        style="@style/layout_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

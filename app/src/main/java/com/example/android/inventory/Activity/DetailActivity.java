@@ -2,6 +2,7 @@ package com.example.android.inventory.Activity;
 
 import android.app.AlertDialog;
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
@@ -15,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -48,6 +50,11 @@ public class DetailActivity extends AppCompatActivity implements
     private EditText mPriceEditText;
     private EditText mQuantityEditText;
 
+    private Button mDelete;
+    private Button mSave;
+    private Button mSale;
+    private Button mShipment;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,43 +68,84 @@ public class DetailActivity extends AppCompatActivity implements
         mPriceEditText = (EditText) findViewById(R.id.item_price);
         mQuantityEditText = (EditText) findViewById(R.id.item_quantity);
 
+        mDelete = (Button) findViewById(R.id.button_delete);
+        mSave = (Button) findViewById(R.id.button_save);
+        mSale = (Button) findViewById(R.id.button_sale);
+        mShipment = (Button) findViewById(R.id.button_shipment);
+
         if (mCurrentItemUri == null) {
             setTitle("Add an Item");
             invalidateOptionsMenu();
+            mSave.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    insertItem();
+                    finish();
+                }
+            });
         } else {
             getLoaderManager().initLoader(INVENTORY_LOADER, null, this);
+            mSave.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    updateItem();
+                    finish();
+                }
+            });
         }
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_details, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_save:
-                insertItem();
-                finish();
-                break;
-            case R.id.action_delete:
+        mDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 showDeleteConfirmationDialog();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+            }
+        });
+
+        mSale.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                quantityMinus();
+            }
+        });
+
+        mShipment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                quantityPlus();
+            }
+        });
+
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        if (mCurrentItemUri == null) {
-            MenuItem menuItem = menu.findItem(R.id.action_delete);
-            menuItem.setVisible(false);
-        }
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.menu_details, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.action_save:
+//                insertItem();
+//                finish();
+//                break;
+//            case R.id.action_delete:
+//                showDeleteConfirmationDialog();
+//                return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
+//
+//    @Override
+//    public boolean onPrepareOptionsMenu(Menu menu) {
+//        super.onPrepareOptionsMenu(menu);
+//        if (mCurrentItemUri == null) {
+//            MenuItem menuItem = menu.findItem(R.id.action_delete);
+//            menuItem.setVisible(false);
+//        }
+//        return true;
+//    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -209,6 +257,66 @@ public class DetailActivity extends AppCompatActivity implements
             Toast.makeText(this, "Error saving item", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(this, "Item Saved", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void updateItem() {
+        String nameString = mNameEditText.getText().toString().trim();
+        String quantityString = mQuantityEditText.getText().toString().trim();
+        int quantity = Integer.parseInt(quantityString);
+        String priceString = mPriceEditText.getText().toString().trim();
+        int price = Integer.parseInt(priceString);
+        String descriptionString = mDescriptionEditText.getText().toString().trim();
+        String supplierString = mSupplierEditText.getText().toString().trim();
+
+        ContentValues values = new ContentValues();
+        values.put(InventoryEntry.NAME, nameString);
+        values.put(InventoryEntry.QUANTITY, quantity);
+        values.put(InventoryEntry.PRICE, price);
+        values.put(InventoryEntry.DESCRIPTION, descriptionString);
+        values.put(InventoryEntry.SUPPLIER, supplierString);
+
+        Long rowId = ContentUris.parseId(mCurrentItemUri);
+        String[] selectionArgs = {rowId.toString()};
+
+        int updatedRows = getContentResolver().update(
+                mCurrentItemUri,
+                values,
+                InventoryEntry._ID,
+                selectionArgs);
+
+        if (updatedRows < 0) {
+            Toast.makeText(this, "Update Not completed", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Update Completed", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void quantityMinus() {
+
+        if (mQuantityEditText.getText().toString().isEmpty()) {
+            mQuantityEditText.setText(0 + "");
+        } else {
+            String stringQuantity = mQuantityEditText.getText().toString().trim();
+            int quantity = Integer.parseInt(stringQuantity);
+            if (quantity > 0) {
+                quantity--;
+                mQuantityEditText.setText(quantity + "");
+            } else {
+                Toast.makeText(this, "Quantity cannot be below 0", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void quantityPlus() {
+
+        if (mQuantityEditText.getText().toString().isEmpty()) {
+            mQuantityEditText.setText(0 + "");
+        } else {
+            String stringQuantity = mQuantityEditText.getText().toString().trim();
+            int quantity = Integer.parseInt(stringQuantity);
+            quantity++;
+            mQuantityEditText.setText(quantity + "");
         }
     }
 }
