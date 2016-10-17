@@ -121,14 +121,14 @@ public class MainActivity extends AppCompatActivity
 
     private void showDeleteConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Delete All Items?");
-        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.delete_all_items);
+        builder.setPositiveButton(R.string.delete_option, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 deleteItem();
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel_option, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (dialogInterface != null) {
@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity
     private void deleteItem() {
         int rowsDeleted = getContentResolver().delete(InventoryEntry.CONTENT_URI, null, null);
         if (rowsDeleted > 0) {
-            Toast.makeText(this, "All Items Deleted", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.all_items_deleted, Toast.LENGTH_LONG).show();
         }
     }
 }

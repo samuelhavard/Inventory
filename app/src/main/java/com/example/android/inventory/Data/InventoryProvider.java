@@ -7,12 +7,12 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 
 import com.example.android.inventory.Data.InventoryContract.InventoryEntry;
 
 /**
- * Created by samue_000 on 10/9/2016.
+ *
  */
 
 public class InventoryProvider extends ContentProvider {
@@ -35,9 +35,8 @@ public class InventoryProvider extends ContentProvider {
         return true;
     }
 
-    @Nullable
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
 
         SQLiteDatabase database = mDbHelper.getReadableDatabase();
@@ -72,13 +71,14 @@ public class InventoryProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Cannot query unknown URI " + uri);
         }
-        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        if (getContext() != null) {
+            cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        }
         return cursor;
     }
 
-    @Nullable
     @Override
-    public String getType(Uri uri) {
+    public String getType(@NonNull Uri uri) {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case INVENTORY:
@@ -90,9 +90,8 @@ public class InventoryProvider extends ContentProvider {
         }
     }
 
-    @Nullable
     @Override
-    public Uri insert(Uri uri, ContentValues contentValues) {
+    public Uri insert(@NonNull Uri uri, ContentValues contentValues) {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case INVENTORY:
@@ -146,12 +145,14 @@ public class InventoryProvider extends ContentProvider {
             return null;
         }
 
-        getContext().getContentResolver().notifyChange(uri, null);
+        if (getContext() != null) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
         return ContentUris.withAppendedId(uri, id);
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
         final  int match = sUriMatcher.match(uri);
         int rowsDeleted;
@@ -169,13 +170,15 @@ public class InventoryProvider extends ContentProvider {
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);
         }
         if (rowsDeleted !=0) {
-            getContext().getContentResolver().notifyChange(uri, null);
+            if (getContext() != null) {
+                getContext().getContentResolver().notifyChange(uri, null);
+            }
         }
         return rowsDeleted;
     }
 
     @Override
-    public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
+    public int update(@NonNull Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
         final int matcher = sUriMatcher.match(uri);
         switch (matcher) {
             case INVENTORY:
@@ -193,7 +196,7 @@ public class InventoryProvider extends ContentProvider {
                                  String[] selectionArgs) {
         if (contentValues.containsKey(InventoryEntry.NAME)) {
             String name = contentValues.getAsString(InventoryEntry.NAME);
-            if (name == null) {
+            if (name.isEmpty()) {
                 throw new IllegalArgumentException("Item requires a name");
             }
         }
@@ -232,7 +235,9 @@ public class InventoryProvider extends ContentProvider {
                 selectionArgs);
 
         if (rowsUpdated != 0) {
-            getContext().getContentResolver().notifyChange(uri, null);
+            if(getContext() != null) {
+                getContext().getContentResolver().notifyChange(uri, null);
+            }
         }
         return rowsUpdated;
     }

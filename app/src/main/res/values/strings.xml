@@ -3,6 +3,8 @@
 
     <!-- -->
     <string name="quantity_message">%1$d</string>
+
+    <!-- -->
     <string name="price_message">%1$d</string>
 
     <!-- -->
@@ -10,16 +12,36 @@
 
     <!-- -->
     <string name="delete_question">Delete this item?</string>
+
+    <!-- -->
     <string name="delete_option">Delete</string>
+
+    <!-- -->
     <string name="cancel_option">Cancel</string>
+
     <!-- -->
     <string name="item_deleted">Item Deleted</string>
+
+    <!-- -->
     <string name="error_saving_item">Error saving item</string>
+
+    <!-- -->
     <string name="item_saved">Item Saved</string>
+
+    <!-- -->
     <string name="update_not_completed">Update Not completed</string>
+
+    <!-- -->
     <string name="update_completed">Update Completed</string>
+
+    <!-- -->
     <string name="quantity_below_zero">Quantity cannot be below 0</string>
 
+    <!-- -->
+    <string name="delete_all_items">Delete All Items?</string>
+
+    <!-- -->
+    <string name="all_items_deleted">All Items Deleted</string>
 
     <!-- -->
 </resources>
