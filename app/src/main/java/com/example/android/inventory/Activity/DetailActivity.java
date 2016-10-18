@@ -160,8 +160,8 @@ public class DetailActivity extends AppCompatActivity implements
             mNameEditText.setText(name);
             mDescriptionEditText.setText(description);
             mSupplierEditText.setText(supplier);
-            mPriceEditText.setText(getString(R.string.price_message, itemPrice));
-            mQuantityEditText.setText(getString(R.string.quantity_message, itemQuantity));
+            mPriceEditText.setText(getString(R.string.number_message, itemPrice));
+            mQuantityEditText.setText(getString(R.string.number_message, itemQuantity));
         }
     }
 
@@ -263,13 +263,13 @@ public class DetailActivity extends AppCompatActivity implements
 
     private void quantityMinus() {
         if (mQuantityEditText.getText().toString().isEmpty()) {
-            mQuantityEditText.setText(getString(R.string.quantity_message, 0));
+            mQuantityEditText.setText(getString(R.string.number_message, 0));
         } else {
             String stringQuantity = mQuantityEditText.getText().toString().trim();
             int quantity = Integer.parseInt(stringQuantity);
             if (quantity > 0) {
                 quantity--;
-                mQuantityEditText.setText(getString(R.string.quantity_message, quantity));
+                mQuantityEditText.setText(getString(R.string.number_message, quantity));
             } else {
                 Toast.makeText(this, R.string.quantity_below_zero, Toast.LENGTH_LONG).show();
             }
@@ -278,12 +278,12 @@ public class DetailActivity extends AppCompatActivity implements
 
     private void quantityPlus() {
         if (mQuantityEditText.getText().toString().isEmpty()) {
-            mQuantityEditText.setText(getString(R.string.quantity_message, 0));
+            mQuantityEditText.setText(getString(R.string.number_message, 0));
         } else {
             String stringQuantity = mQuantityEditText.getText().toString().trim();
             int quantity = Integer.parseInt(stringQuantity);
             quantity++;
-            mQuantityEditText.setText(getString(R.string.quantity_message, quantity));
+            mQuantityEditText.setText(getString(R.string.number_message, quantity));
         }
     }
 
