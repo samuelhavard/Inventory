@@ -10,7 +10,10 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -60,15 +63,15 @@ public class DetailActivity extends AppCompatActivity implements
         mPriceEditText = (EditText) findViewById(R.id.item_price);
         mQuantityEditText = (EditText) findViewById(R.id.item_quantity);
 
-        Button mDelete = (Button) findViewById(R.id.button_delete);
-        Button mSave = (Button) findViewById(R.id.button_save);
-        Button mSale = (Button) findViewById(R.id.button_sale);
-        Button mShipment = (Button) findViewById(R.id.button_shipment);
+        Button deleteButton = (Button) findViewById(R.id.button_delete);
+        Button saveButton = (Button) findViewById(R.id.button_save);
+        Button saleButton = (Button) findViewById(R.id.button_sale);
+        Button shipmentButton = (Button) findViewById(R.id.button_shipment);
 
         if (mCurrentItemUri == null) {
             setTitle(getString(R.string.add_item));
             invalidateOptionsMenu();
-            mSave.setOnClickListener(new View.OnClickListener() {
+            saveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     insertItem();
@@ -77,7 +80,7 @@ public class DetailActivity extends AppCompatActivity implements
             });
         } else {
             getLoaderManager().initLoader(INVENTORY_LOADER, null, this);
-            mSave.setOnClickListener(new View.OnClickListener() {
+            saveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     updateItem();
@@ -86,27 +89,34 @@ public class DetailActivity extends AppCompatActivity implements
             });
         }
 
-        mDelete.setOnClickListener(new View.OnClickListener() {
+        deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showDeleteConfirmationDialog();
             }
         });
 
-        mSale.setOnClickListener(new View.OnClickListener() {
+        saleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 quantityMinus();
             }
         });
 
-        mShipment.setOnClickListener(new View.OnClickListener() {
+        shipmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 quantityPlus();
             }
         });
 
+        mNameEditText.setOnTouchListener(mTouchListener);
+        mDescriptionEditText.setOnTouchListener(mTouchListener);
+        mSupplierEditText.setOnTouchListener(mTouchListener);
+        mPriceEditText.setOnTouchListener(mTouchListener);
+        mQuantityEditText.setOnTouchListener(mTouchListener);
+        saleButton.setOnTouchListener(mTouchListener);
+        shipmentButton.setOnTouchListener(mTouchListener);
     }
 
     @Override
@@ -275,5 +285,63 @@ public class DetailActivity extends AppCompatActivity implements
             quantity++;
             mQuantityEditText.setText(getString(R.string.quantity_message, quantity));
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_details, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (!mItemHasChanged) {
+                    NavUtils.navigateUpFromSameTask(this);
+                    return true;
+                }
+
+                DialogInterface.OnClickListener discardButtonClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        NavUtils.navigateUpFromSameTask(DetailActivity.this);
+                    }
+                };
+                showUnsavedChangesDialog(discardButtonClickListener);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!mItemHasChanged) {
+            super.onBackPressed();
+            return;
+        }
+        DialogInterface.OnClickListener discardButtonClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+            }
+        };
+        showUnsavedChangesDialog(discardButtonClickListener);
+    }
+
+    private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardButtonClickListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.discard_and_quit);
+        builder.setPositiveButton(R.string.discard_option, discardButtonClickListener);
+        builder.setNegativeButton(R.string.keep_editing_option, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (dialogInterface != null) {
+                    dialogInterface.dismiss();
+                }
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }
