@@ -35,6 +35,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         ListView inventoryListView = (ListView) findViewById(R.id.activity_main);
+        View emptyView = findViewById(R.id.empty_image_view);
+        inventoryListView.setEmptyView(emptyView);
+
         mInventoryCursorAdapter = new InventoryCursorAdapter(this, null);
         inventoryListView.setAdapter(mInventoryCursorAdapter);
 
