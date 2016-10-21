@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="8dp">
 
     <LinearLayout
+        android:id="@+id/name_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/forward_image_view"
+        android:layout_toStartOf="@id/forward_image_view"
         android:orientation="horizontal">
 
         <TextView
@@ -15,7 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Name: " />
+            android:text="@string/list_item_name_text_view" />
 
         <TextView
             android:id="@+id/name"
@@ -26,8 +31,12 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/price_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/name_layout"
+        android:layout_toLeftOf="@+id/forward_image_view"
+        android:layout_toStartOf="@+id/forward_image_view"
         android:orientation="horizontal">
 
         <TextView
@@ -35,7 +44,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Price: " />
+            android:text="@string/list_item_price_text_view" />
 
         <TextView
             android:id="@+id/price"
@@ -47,8 +56,12 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/quantity_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/price_layout"
+        android:layout_toLeftOf="@+id/forward_image_view"
+        android:layout_toStartOf="@+id/forward_image_view"
         android:orientation="horizontal">
 
         <TextView
@@ -56,7 +69,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Quantity: " />
+            android:text="@string/list_item_quantity_text_view" />
 
         <TextView
             android:id="@+id/quantity"
@@ -66,4 +79,14 @@
             android:layout_weight="4" />
     </LinearLayout>
 
-</LinearLayout>
+    <ImageView
+        android:contentDescription="@string/list_item_content_description"
+        android:id="@+id/forward_image_view"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_forward_black_24dp" />
+
+</RelativeLayout>

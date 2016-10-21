@@ -94,5 +94,17 @@
     <!-- Default Quantity amount [CHAR LIMIT=0] -->
     <string name="default_quantity" translatable="false">0</string>
 
-    <!-- [CHAR LIMIT=] -->
+    <!-- list_item quantity label text view[CHAR LIMIT=20] -->
+    <string name="list_item_quantity_text_view">Quantity:</string>
+
+    <!-- list_item image content description label [CHAR LIMIT=20] -->
+    <string name="list_item_content_description">Forward Arrow</string>
+
+    <!-- list_item price label text view [CHAR LIMIT=20] -->
+    <string name="list_item_price_text_view">Price:</string>
+
+    <!-- list_item name label text view [CHAR LIMIT=20] -->
+    <string name="list_item_name_text_view">Name:</string>
+
+    <!-- [CHAR LIMIT=20] -->
 </resources>
