@@ -80,13 +80,13 @@
     </LinearLayout>
 
     <ImageView
-        android:contentDescription="@string/list_item_content_description"
         android:id="@+id/forward_image_view"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:contentDescription="@string/list_item_content_description"
         android:src="@drawable/ic_forward_black_24dp" />
 
 </RelativeLayout>
