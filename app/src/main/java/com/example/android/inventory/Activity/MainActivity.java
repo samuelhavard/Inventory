@@ -18,7 +18,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.example.android.inventory.Adapter.InventoryCursorAdapter;
 import com.example.android.inventory.Data.InventoryContract.InventoryEntry;
 import com.example.android.inventory.R;
@@ -85,11 +84,12 @@ public class MainActivity extends AppCompatActivity
 
 
     private void insertDummyData() {
+
         ContentValues values = new ContentValues();
         values.put(InventoryEntry.NAME, "Thing");
         values.put(InventoryEntry.QUANTITY, 1);
         values.put(InventoryEntry.PRICE, 100);
-        values.put(InventoryEntry.DESCRIPTION, "A thing that does stuff");
+        values.put(InventoryEntry.DESCRIPTION, "www.amazon.com");
         values.put(InventoryEntry.SUPPLIER, "Dude on the corner");
 
         getContentResolver().insert(InventoryEntry.CONTENT_URI, values);

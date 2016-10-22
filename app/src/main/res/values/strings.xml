@@ -4,6 +4,8 @@
     <!-- Formatted String for displaying quantity and price [CHAR LIMIT=0]-->
     <string name="number_message" translatable="false">%1$d</string>
 
+    <string name="price_message" translatable="false">%1$d $</string>
+
     <!-- Detail Activity Title [CHAR LIMIT=20] -->
     <string name="add_item">Add an Item</string>
 
@@ -105,6 +107,9 @@
 
     <!-- list_item name label text view [CHAR LIMIT=20] -->
     <string name="list_item_name_text_view">Name:</string>
+
+    <!-- [CHAR LIMIT=20] -->
+    <string name="list_item_sale_button">Sale</string>
 
     <!-- [CHAR LIMIT=20] -->
 </resources>
