@@ -100,7 +100,7 @@
     <string name="list_item_quantity_text_view">Quantity:</string>
 
     <!-- list_item image content description label [CHAR LIMIT=20] -->
-    <string name="list_item_content_description">Forward Arrow</string>
+    <string name="list_item_content_description">Sale symbol</string>
 
     <!-- list_item price label text view [CHAR LIMIT=20] -->
     <string name="list_item_price_text_view">Price:</string>
@@ -110,6 +110,7 @@
 
     <!-- [CHAR LIMIT=20] -->
     <string name="list_item_sale_button">Sale</string>
+    <string name="empty_set_text">It\'s Empty in here, add an Item</string>
 
     <!-- [CHAR LIMIT=20] -->
 </resources>

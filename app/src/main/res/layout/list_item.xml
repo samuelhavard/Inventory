@@ -11,8 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/forward_image_view"
-        android:layout_toStartOf="@id/forward_image_view"
+        android:layout_toLeftOf="@+id/money_image_view"
+        android:layout_toStartOf="@id/money_image_view"
         android:orientation="horizontal">
 
         <TextView
@@ -35,8 +35,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/name_layout"
-        android:layout_toLeftOf="@+id/forward_image_view"
-        android:layout_toStartOf="@+id/forward_image_view"
+        android:layout_toLeftOf="@+id/money_image_view"
+        android:layout_toStartOf="@+id/money_image_view"
         android:orientation="horizontal">
 
         <TextView
@@ -60,8 +60,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/price_layout"
-        android:layout_toLeftOf="@+id/forward_image_view"
-        android:layout_toStartOf="@+id/forward_image_view"
+        android:layout_toLeftOf="@+id/money_image_view"
+        android:layout_toStartOf="@+id/money_image_view"
         android:orientation="horizontal">
 
         <TextView
@@ -88,6 +88,6 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:contentDescription="@string/list_item_content_description"
-        android:src="@drawable/money_image" />
+        android:src="@drawable/money_fotoflexer_photo" />
 
 </RelativeLayout>
