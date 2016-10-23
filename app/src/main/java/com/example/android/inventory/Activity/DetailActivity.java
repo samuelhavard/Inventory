@@ -6,6 +6,7 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -50,6 +51,9 @@ public class DetailActivity extends AppCompatActivity implements
     private EditText mPriceEditText;
     private EditText mQuantityEditText;
 
+    private String mSupplier;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +71,7 @@ public class DetailActivity extends AppCompatActivity implements
         Button saveButton = (Button) findViewById(R.id.button_save);
         Button saleButton = (Button) findViewById(R.id.button_sale);
         Button shipmentButton = (Button) findViewById(R.id.button_shipment);
+        Button orderButton = (Button) findViewById(R.id.button_order);
 
         if (mCurrentItemUri == null) {
             setTitle(getString(R.string.add_item));
@@ -107,6 +112,22 @@ public class DetailActivity extends AppCompatActivity implements
             @Override
             public void onClick(View view) {
                 quantityPlus();
+            }
+        });
+
+        orderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uri orderUri;
+                if(!mSupplier.startsWith("https://") && !mSupplier.startsWith("http://")){
+                    String url = "http://" + mSupplier;
+                    orderUri = Uri.parse(url);
+                } else {
+                    orderUri = Uri.parse(mSupplier);
+                }
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(orderUri);
+                startActivity(intent);
             }
         });
 
@@ -153,13 +174,13 @@ public class DetailActivity extends AppCompatActivity implements
 
             String name = cursor.getString(nameColumnIndex);
             String description = cursor.getString(descriptionColumnIndex);
-            String supplier = cursor.getString(supplierColumnIndex);
+            mSupplier = cursor.getString(supplierColumnIndex);
             Integer itemPrice = cursor.getInt(priceColumnIndex);
             Integer itemQuantity = cursor.getInt(quantityColumnIndex);
 
             mNameEditText.setText(name);
             mDescriptionEditText.setText(description);
-            mSupplierEditText.setText(supplier);
+            mSupplierEditText.setText(mSupplier);
             mPriceEditText.setText(getString(R.string.number_message, itemPrice));
             mQuantityEditText.setText(getString(R.string.number_message, itemQuantity));
         }
@@ -344,4 +365,8 @@ public class DetailActivity extends AppCompatActivity implements
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
+
+//    private Uri getUri(String supplier) {
+//        Uri supplierUri = Uri.parse(supplier);
+//    }
 }

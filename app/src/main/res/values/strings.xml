@@ -111,6 +111,7 @@
     <!-- [CHAR LIMIT=20] -->
     <string name="list_item_sale_button">Sale</string>
     <string name="empty_set_text">It\'s Empty in here, add an Item</string>
+    <string name="order_from_supplier">Order from Supplier</string>
 
     <!-- [CHAR LIMIT=20] -->
 </resources>

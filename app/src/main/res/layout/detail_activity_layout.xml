@@ -131,6 +131,14 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/button_order"
+        style="@style/layout_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button_save"
+        android:text="@string/order_from_supplier" />
+
+    <Button
         android:id="@+id/button_save"
         style="@style/layout_style"
         android:layout_width="match_parent"

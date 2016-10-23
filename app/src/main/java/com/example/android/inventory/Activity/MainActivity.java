@@ -89,8 +89,8 @@ public class MainActivity extends AppCompatActivity
         values.put(InventoryEntry.NAME, "Thing");
         values.put(InventoryEntry.QUANTITY, 1);
         values.put(InventoryEntry.PRICE, 100);
-        values.put(InventoryEntry.DESCRIPTION, "www.amazon.com");
-        values.put(InventoryEntry.SUPPLIER, "Dude on the corner");
+        values.put(InventoryEntry.DESCRIPTION, "A thing that does stuff!");
+        values.put(InventoryEntry.SUPPLIER, "www.amazon.com");
 
         getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
     }
