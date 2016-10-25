@@ -110,8 +110,18 @@
 
     <!-- [CHAR LIMIT=20] -->
     <string name="list_item_sale_button">Sale</string>
+
+    <!-- [CHAR LIMIT=20] -->
     <string name="empty_set_text">It\'s Empty in here, add an Item</string>
+
+    <!-- [CHAR LIMIT=20] -->
     <string name="order_from_supplier">Order from Supplier</string>
+
+    <!-- [CHAR LIMIT=20] -->
+    <string name="default_empty_image">Default Empty Image</string>
+    <string name="insert_new_item">Insert New Item</string>
+    <string name="insert_dummy_data">Insert Dummy Data</string>
+    <string name="empty_set_image">Empty Set Image</string>
 
     <!-- [CHAR LIMIT=20] -->
 </resources>

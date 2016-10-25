@@ -4,162 +4,166 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/detail_image"
-        android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:src="@drawable/no_image_available"/>
-
     <LinearLayout
-        android:layout_above="@id/description_view"
-        android:id="@+id/name_view"
-        style="@style/layout_style"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/name_text_view"
-            style="@style/detail_style"
-            android:layout_height="wrap_content"
-            android:text="@string/item_name_textView" />
-
-        <EditText
-            android:id="@+id/item_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/item_name" />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/description_view"
-        style="@style/layout_style"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/supplier_view"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/description_text_view"
-            style="@style/detail_style"
-            android:layout_height="wrap_content"
-            android:text="@string/description" />
-
-        <EditText
-            android:id="@+id/item_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/item_description" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/supplier_view"
-        style="@style/layout_style"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/price_view"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/supplier_text_view"
-            style="@style/detail_style"
-            android:layout_height="wrap_content"
-            android:text="@string/supplier" />
-
-        <EditText
-            android:id="@+id/item_supplier"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/item_supplier" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/price_view"
-        style="@style/layout_style"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/quantity_text_view"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/price_text_view"
-            style="@style/detail_style"
-            android:layout_height="wrap_content"
-            android:text="@string/price" />
-
-        <EditText
-            android:id="@+id/item_price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/item_price"
-            android:inputType="number" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/quantity_text_view"
-        style="@style/detail_style"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/quantity_layout"
-        android:gravity="center"
-        android:text="@string/quantity" />
-
-    <LinearLayout
-        android:id="@+id/quantity_layout"
-        style="@style/layout_style"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/button_order"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/button_sale"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/btn_sale" />
-
-        <EditText
-            android:id="@+id/item_quantity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:hint="@string/quantity_hint"
-            android:inputType="number"
-            android:text="@string/default_quantity" />
-
-        <Button
-            android:id="@+id/button_shipment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/btn_shipment" />
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/button_order"
-        style="@style/layout_style"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/button_save"
-        android:text="@string/order_from_supplier" />
-
-    <Button
-        android:id="@+id/button_save"
-        style="@style/layout_style"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/button_delete"
-        android:text="@string/btn_save_item" />
-
-    <Button
-        android:id="@+id/button_delete"
-        style="@style/layout_style"
+        android:id="@+id/test"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="8dp"
-        android:text="@string/btn_delete_item" />
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/name_view"
+            style="@style/layout_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/name_text_view"
+                style="@style/detail_style"
+                android:layout_height="wrap_content"
+                android:text="@string/item_name_textView" />
+
+            <EditText
+                android:id="@+id/item_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/item_name" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/description_view"
+            style="@style/layout_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/description_text_view"
+                style="@style/detail_style"
+                android:layout_height="wrap_content"
+                android:text="@string/description" />
+
+            <EditText
+                android:id="@+id/item_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/item_description" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/supplier_view"
+            style="@style/layout_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/supplier_text_view"
+                style="@style/detail_style"
+                android:layout_height="wrap_content"
+                android:text="@string/supplier" />
+
+            <EditText
+                android:id="@+id/item_supplier"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/item_supplier" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/price_view"
+            style="@style/layout_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/price_text_view"
+                style="@style/detail_style"
+                android:layout_height="wrap_content"
+                android:text="@string/price" />
+
+            <EditText
+                android:id="@+id/item_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/item_price"
+                android:inputType="number" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/quantity_text_view"
+            style="@style/detail_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/quantity" />
+
+        <LinearLayout
+            android:id="@+id/quantity_layout"
+            style="@style/layout_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button_sale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_sale" />
+
+            <EditText
+                android:id="@+id/item_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:hint="@string/quantity_hint"
+                android:inputType="number"
+                android:text="@string/default_quantity" />
+
+            <Button
+                android:id="@+id/button_shipment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_shipment" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button_order"
+            style="@style/layout_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/order_from_supplier" />
+
+        <Button
+            android:id="@+id/button_save"
+            style="@style/layout_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_save_item" />
+
+        <Button
+            android:id="@+id/button_delete"
+            style="@style/layout_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/btn_delete_item" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/detail_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/test"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:contentDescription="@string/default_empty_image"
+        android:src="@drawable/no_image_available" />
 </RelativeLayout>
