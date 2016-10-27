@@ -1,5 +1,6 @@
 package com.example.android.inventory.Activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentUris;
@@ -8,21 +9,39 @@ import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
+import android.util.Base64;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.android.inventory.Data.InventoryContract.InventoryEntry;
 import com.example.android.inventory.R;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.jar.Manifest;
+
+import static android.R.attr.bitmap;
+import static android.R.attr.readPermission;
 
 /**
  *
@@ -51,7 +70,13 @@ public class DetailActivity extends AppCompatActivity implements
     private EditText mPriceEditText;
     private EditText mQuantityEditText;
 
+    private ImageView mItemImageView;
+
     private String mSupplier;
+
+    private Uri mSelectedImage;
+
+    private final int REQUEST_CODE_ASK_PERMISSIONS = 123;
 
 
     @Override
@@ -104,7 +129,19 @@ public class DetailActivity extends AppCompatActivity implements
         saleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                quantityMinus();
+                //quantityMinus();
+
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    int hasExternalPermission = checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE);
+                    if (hasExternalPermission != PackageManager.PERMISSION_GRANTED) {
+                        requestPermissions(new String[] {android.Manifest.permission.READ_EXTERNAL_STORAGE},
+                                REQUEST_CODE_ASK_PERMISSIONS);
+                        return;
+                    }
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    startActivityForResult(intent, 1);
+                }
             }
         });
 
@@ -131,6 +168,8 @@ public class DetailActivity extends AppCompatActivity implements
             }
         });
 
+
+
         mNameEditText.setOnTouchListener(mTouchListener);
         mDescriptionEditText.setOnTouchListener(mTouchListener);
         mSupplierEditText.setOnTouchListener(mTouchListener);
@@ -138,6 +177,27 @@ public class DetailActivity extends AppCompatActivity implements
         mQuantityEditText.setOnTouchListener(mTouchListener);
         saleButton.setOnTouchListener(mTouchListener);
         shipmentButton.setOnTouchListener(mTouchListener);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_ASK_PERMISSIONS:
+                if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getImage();
+                } else {
+                    Toast.makeText(this, "Access Denied", Toast.LENGTH_SHORT ).show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    public void getImage() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivityForResult(intent, 1);
     }
 
     @Override
@@ -234,12 +294,14 @@ public class DetailActivity extends AppCompatActivity implements
         String descriptionString = mDescriptionEditText.getText().toString().trim();
         String supplierString = mSupplierEditText.getText().toString().trim();
 
+
         ContentValues values = new ContentValues();
         values.put(InventoryEntry.NAME, nameString);
         values.put(InventoryEntry.QUANTITY, quantity);
         values.put(InventoryEntry.PRICE, price);
         values.put(InventoryEntry.DESCRIPTION, descriptionString);
         values.put(InventoryEntry.SUPPLIER, supplierString);
+        values.put(InventoryEntry.IMAGE, mSelectedImage.toString());
 
         Uri newUri = getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
 
@@ -247,6 +309,28 @@ public class DetailActivity extends AppCompatActivity implements
             Toast.makeText(this, R.string.error_saving_item, Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(this, R.string.item_saved, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        mItemImageView = (ImageView) findViewById(R.id.detail_image);
+
+        if(requestCode == 1 && resultCode == RESULT_OK && data != null) {
+            Uri selectedImage = data.getData();
+            Bitmap bitmap = null;
+
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (bitmap != null) {
+                mItemImageView.setImageBitmap(bitmap);
+            }
         }
     }
 
@@ -308,12 +392,6 @@ public class DetailActivity extends AppCompatActivity implements
         }
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_details, menu);
-//        return true;
-//    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -365,8 +443,4 @@ public class DetailActivity extends AppCompatActivity implements
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-
-//    private Uri getUri(String supplier) {
-//        Uri supplierUri = Uri.parse(supplier);
-//    }
 }

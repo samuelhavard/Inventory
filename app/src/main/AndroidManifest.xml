@@ -24,7 +24,9 @@
         <provider
             android:authorities="com.example.android.inventory"
             android:name=".Data.InventoryProvider"
-            android:exported="false" />
+            android:exported="false"
+            android:grantUriPermissions="true"/>
     </application>
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 </manifest>

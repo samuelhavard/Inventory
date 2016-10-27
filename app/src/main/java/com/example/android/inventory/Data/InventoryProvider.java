@@ -137,6 +137,7 @@ public class InventoryProvider extends ContentProvider {
                 throw new IllegalArgumentException("Item requires a valid supplier");
             }
         }
+
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
         long id = database.insert(InventoryEntry.TABLE_NAME, null, values);

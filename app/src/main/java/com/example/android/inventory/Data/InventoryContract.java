@@ -24,6 +24,7 @@ public class InventoryContract {
         public static final String PRICE = "price";
         public static final String DESCRIPTION = "description";
         public static final String SUPPLIER = "supplier";
+        public static final String IMAGE = "image";
 
         public static final String CONTENT_LIST_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE
