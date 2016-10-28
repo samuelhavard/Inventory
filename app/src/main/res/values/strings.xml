@@ -122,6 +122,7 @@
     <string name="insert_new_item">Insert New Item</string>
     <string name="insert_dummy_data">Insert Dummy Data</string>
     <string name="empty_set_image">Empty Set Image</string>
+    <string name="add_picture">Add Picture</string>
 
     <!-- [CHAR LIMIT=20] -->
 </resources>

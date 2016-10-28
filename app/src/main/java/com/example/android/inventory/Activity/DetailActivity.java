@@ -1,6 +1,5 @@
 package com.example.android.inventory.Activity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentUris;
@@ -12,18 +11,12 @@ import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,13 +28,7 @@ import android.widget.Toast;
 import com.example.android.inventory.Data.InventoryContract.InventoryEntry;
 import com.example.android.inventory.R;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.jar.Manifest;
-
-import static android.R.attr.bitmap;
-import static android.R.attr.readPermission;
 
 /**
  *
@@ -75,6 +62,7 @@ public class DetailActivity extends AppCompatActivity implements
     private String mSupplier;
 
     private Uri mSelectedImage;
+    private Bitmap mItemImageBitmap;
 
     private final int REQUEST_CODE_ASK_PERMISSIONS = 123;
 
@@ -97,6 +85,7 @@ public class DetailActivity extends AppCompatActivity implements
         Button saleButton = (Button) findViewById(R.id.button_sale);
         Button shipmentButton = (Button) findViewById(R.id.button_shipment);
         Button orderButton = (Button) findViewById(R.id.button_order);
+        Button imageButton = (Button) findViewById(R.id.image_button);
 
         if (mCurrentItemUri == null) {
             setTitle(getString(R.string.add_item));
@@ -119,18 +108,9 @@ public class DetailActivity extends AppCompatActivity implements
             });
         }
 
-        deleteButton.setOnClickListener(new View.OnClickListener() {
+        imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDeleteConfirmationDialog();
-            }
-        });
-
-        saleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //quantityMinus();
-
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                     int hasExternalPermission = checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE);
                     if (hasExternalPermission != PackageManager.PERMISSION_GRANTED) {
@@ -144,6 +124,22 @@ public class DetailActivity extends AppCompatActivity implements
                 }
             }
         });
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDeleteConfirmationDialog();
+            }
+        });
+
+        saleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                quantityMinus();
+            }
+        });
+
+
 
         shipmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -319,17 +315,17 @@ public class DetailActivity extends AppCompatActivity implements
         mItemImageView = (ImageView) findViewById(R.id.detail_image);
 
         if(requestCode == 1 && resultCode == RESULT_OK && data != null) {
-            Uri selectedImage = data.getData();
-            Bitmap bitmap = null;
+            mSelectedImage = data.getData();
+            mItemImageBitmap = null;
 
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                mItemImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), mSelectedImage);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            if (bitmap != null) {
-                mItemImageView.setImageBitmap(bitmap);
+            if (mItemImageBitmap != null) {
+                mItemImageView.setImageBitmap(mItemImageBitmap);
             }
         }
     }

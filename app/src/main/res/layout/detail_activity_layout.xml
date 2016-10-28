@@ -133,12 +133,27 @@
                 android:text="@string/btn_shipment" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/button_order"
-            style="@style/layout_style"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/order_from_supplier" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/image_button"
+                style="@style/layout_style"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/add_picture" />
+
+            <Button
+                android:id="@+id/button_order"
+                style="@style/layout_style"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/order_from_supplier" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/button_save"
@@ -146,6 +161,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/btn_save_item" />
+
+
 
         <Button
             android:id="@+id/button_delete"
@@ -164,6 +181,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_margin="8dp"
         android:contentDescription="@string/default_empty_image"
         android:src="@drawable/no_image_available" />
 </RelativeLayout>
