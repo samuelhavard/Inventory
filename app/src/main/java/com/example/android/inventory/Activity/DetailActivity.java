@@ -383,6 +383,7 @@ public class DetailActivity extends AppCompatActivity implements
     /**
      * byteToImage is a helper method that converts an array of bytes that was formerly stored in a
      * database into a {@link Bitmap}
+     *
      * @param image is an array of bytes to be converted into a {@link Bitmap}
      * @return a {@link Bitmap} to be displayed
      */
@@ -416,6 +417,9 @@ public class DetailActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     *
+     */
     private void updateItem() {
         String nameString = mNameEditText.getText().toString().trim();
         String quantityString = mQuantityEditText.getText().toString().trim();
@@ -450,6 +454,9 @@ public class DetailActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     *
+     */
     private void quantityMinus() {
         if (mQuantityEditText.getText().toString().isEmpty()) {
             mQuantityEditText.setText(getString(R.string.number_message, 0));
@@ -465,6 +472,9 @@ public class DetailActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     *
+     */
     private void quantityPlus() {
         if (mQuantityEditText.getText().toString().isEmpty()) {
             mQuantityEditText.setText(getString(R.string.number_message, 0));
@@ -476,6 +486,11 @@ public class DetailActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -497,6 +512,9 @@ public class DetailActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     *
+     */
     @Override
     public void onBackPressed() {
         if (!mItemHasChanged) {
@@ -512,6 +530,10 @@ public class DetailActivity extends AppCompatActivity implements
         showUnsavedChangesDialog(discardButtonClickListener);
     }
 
+    /**
+     *
+     * @param discardButtonClickListener
+     */
     private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardButtonClickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.discard_and_quit);
