@@ -11,6 +11,7 @@ import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -28,15 +29,23 @@ import android.widget.Toast;
 import com.example.android.inventory.Data.InventoryContract.InventoryEntry;
 import com.example.android.inventory.R;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
- *
+ * {@link DetailActivity} shows the details of a selected item that is or was in inventory.
+ * This screen allows the user to input a new item that contains information such as name, supplier,
+ * quantity of item in stock, a description, along with the ability to update that information or
+ * delete the item entirely.
  */
 
 public class DetailActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
+
+    /*
+    Declare all global variable to be used throughout the detail activity.
+     */
     private static final int INVENTORY_LOADER = 0;
 
     private Uri mCurrentItemUri;
@@ -61,12 +70,17 @@ public class DetailActivity extends AppCompatActivity implements
 
     private String mSupplier;
 
-    private Uri mSelectedImage;
     private Bitmap mItemImageBitmap;
 
     private final int REQUEST_CODE_ASK_PERMISSIONS = 123;
 
-
+    /**
+     * onCreate initializes all global variables to be used and sets on click listeners to the
+     * buttons used in the DetailActivity class.  Additionally, it sets the on touch listener to
+     * each field so the user can be prompted if they want to save the changes or abandon them.
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +93,8 @@ public class DetailActivity extends AppCompatActivity implements
         mSupplierEditText = (EditText) findViewById(R.id.item_supplier);
         mPriceEditText = (EditText) findViewById(R.id.item_price);
         mQuantityEditText = (EditText) findViewById(R.id.item_quantity);
+
+        mItemImageView = (ImageView) findViewById(R.id.detail_image);
 
         Button deleteButton = (Button) findViewById(R.id.button_delete);
         Button saveButton = (Button) findViewById(R.id.button_save);
@@ -114,7 +130,7 @@ public class DetailActivity extends AppCompatActivity implements
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                     int hasExternalPermission = checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE);
                     if (hasExternalPermission != PackageManager.PERMISSION_GRANTED) {
-                        requestPermissions(new String[] {android.Manifest.permission.READ_EXTERNAL_STORAGE},
+                        requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
                                 REQUEST_CODE_ASK_PERMISSIONS);
                         return;
                     }
@@ -140,7 +156,6 @@ public class DetailActivity extends AppCompatActivity implements
         });
 
 
-
         shipmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -152,7 +167,7 @@ public class DetailActivity extends AppCompatActivity implements
             @Override
             public void onClick(View view) {
                 Uri orderUri;
-                if(!mSupplier.startsWith("https://") && !mSupplier.startsWith("http://")){
+                if (!mSupplier.startsWith("https://") && !mSupplier.startsWith("http://")) {
                     String url = "http://" + mSupplier;
                     orderUri = Uri.parse(url);
                 } else {
@@ -165,7 +180,6 @@ public class DetailActivity extends AppCompatActivity implements
         });
 
 
-
         mNameEditText.setOnTouchListener(mTouchListener);
         mDescriptionEditText.setOnTouchListener(mTouchListener);
         mSupplierEditText.setOnTouchListener(mTouchListener);
@@ -175,14 +189,22 @@ public class DetailActivity extends AppCompatActivity implements
         shipmentButton.setOnTouchListener(mTouchListener);
     }
 
+    /**
+     * onRequestPermissionResults listens to the results of a display presented to the user requesting
+     * permission to access images on their device.
+     *
+     * @param requestCode is the code for access requests
+     * @param permissions are the permissions requested to be accessed
+     * @param grantResults are the results of the requests for access
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE_ASK_PERMISSIONS:
-                if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getImage();
                 } else {
-                    Toast.makeText(this, "Access Denied", Toast.LENGTH_SHORT ).show();
+                    Toast.makeText(this, "Access Denied", Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
@@ -190,12 +212,19 @@ public class DetailActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * getImage is a helper method created to retrieve images form the device.
+     */
     public void getImage() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivityForResult(intent, 1);
     }
 
+    /**
+     *
+     * @return a {@link CursorLoader} of data to be presented to the user.
+     */
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         String[] projection = {
@@ -204,7 +233,8 @@ public class DetailActivity extends AppCompatActivity implements
                 InventoryEntry.DESCRIPTION,
                 InventoryEntry.SUPPLIER,
                 InventoryEntry.PRICE,
-                InventoryEntry.QUANTITY};
+                InventoryEntry.QUANTITY,
+                InventoryEntry.IMAGE};
 
         return new CursorLoader(
                 this,
@@ -215,6 +245,11 @@ public class DetailActivity extends AppCompatActivity implements
                 null);
     }
 
+    /**
+     *
+     * @param loader is a {@link Loader <{@link Cursor}>} object
+     * @param cursor is a {@link Cursor} object who's contents are to be displayed to the user.
+     */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if (cursor == null || cursor.getCount() < 1) {
@@ -227,6 +262,7 @@ public class DetailActivity extends AppCompatActivity implements
             int supplierColumnIndex = cursor.getColumnIndex(InventoryEntry.SUPPLIER);
             int priceColumnIndex = cursor.getColumnIndex(InventoryEntry.PRICE);
             int quantityColumnIndex = cursor.getColumnIndex(InventoryEntry.QUANTITY);
+            int imageColumnIndex = cursor.getColumnIndex(InventoryEntry.IMAGE);
 
             String name = cursor.getString(nameColumnIndex);
             String description = cursor.getString(descriptionColumnIndex);
@@ -234,14 +270,24 @@ public class DetailActivity extends AppCompatActivity implements
             Integer itemPrice = cursor.getInt(priceColumnIndex);
             Integer itemQuantity = cursor.getInt(quantityColumnIndex);
 
+            byte[] imageArray = cursor.getBlob(imageColumnIndex);
+
             mNameEditText.setText(name);
             mDescriptionEditText.setText(description);
             mSupplierEditText.setText(mSupplier);
             mPriceEditText.setText(getString(R.string.number_message, itemPrice));
             mQuantityEditText.setText(getString(R.string.number_message, itemQuantity));
+
+            if (imageArray != null) {
+                Bitmap image = byteToImage(imageArray);
+                mItemImageView.setImageBitmap(image);
+            }
         }
     }
 
+    /**
+     * onLoaderReset resets the edit text values back to empty.
+     */
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mNameEditText.setText("");
@@ -251,6 +297,10 @@ public class DetailActivity extends AppCompatActivity implements
         mQuantityEditText.setText("");
     }
 
+    /**
+     * showDeleteConfirmationDialog is a helper method used to prompt the user on if they are
+     * certain the item should be deleted.
+     */
     private void showDeleteConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.delete_question);
@@ -272,6 +322,10 @@ public class DetailActivity extends AppCompatActivity implements
         alertDialog.show();
     }
 
+    /**
+     * deleteItem is a helper methdod that deletes the item from the database if the user confirms
+     * the item should be deleted in showDeleteConfirmationDialog
+     */
     private void deleteItem() {
         int rowDeleted = getContentResolver().delete(mCurrentItemUri, null, null);
         if (rowDeleted > 0) {
@@ -281,6 +335,10 @@ public class DetailActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * insertItem is a helper method used to parse information from the edit text fields and insert
+     * that information into the database.
+     */
     private void insertItem() {
         String nameString = mNameEditText.getText().toString().trim();
         String quantityString = mQuantityEditText.getText().toString().trim();
@@ -289,7 +347,7 @@ public class DetailActivity extends AppCompatActivity implements
         int price = Integer.parseInt(priceString);
         String descriptionString = mDescriptionEditText.getText().toString().trim();
         String supplierString = mSupplierEditText.getText().toString().trim();
-
+        byte[] imageByteArray = imageToByte(mItemImageBitmap);
 
         ContentValues values = new ContentValues();
         values.put(InventoryEntry.NAME, nameString);
@@ -297,7 +355,7 @@ public class DetailActivity extends AppCompatActivity implements
         values.put(InventoryEntry.PRICE, price);
         values.put(InventoryEntry.DESCRIPTION, descriptionString);
         values.put(InventoryEntry.SUPPLIER, supplierString);
-        values.put(InventoryEntry.IMAGE, mSelectedImage.toString());
+        values.put(InventoryEntry.IMAGE, imageByteArray);
 
         Uri newUri = getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
 
@@ -308,14 +366,42 @@ public class DetailActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * imageToByte is a helper method used to convert a {@link Bitmap} to an array of bytes that is then
+     * stored in a database.
+     *
+     * @param bitmap is the user selected image that is to be converted into a byte array that is then
+     *               saved into the database
+     * @return a byte[] to be stored in the database
+     */
+    private byte[] imageToByte(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
+        return stream.toByteArray();
+    }
+
+    /**
+     * byteToImage is a helper method that converts an array of bytes that was formerly stored in a
+     * database into a {@link Bitmap}
+     * @param image is an array of bytes to be converted into a {@link Bitmap}
+     * @return a {@link Bitmap} to be displayed
+     */
+    private static Bitmap byteToImage(byte[] image) {
+        return BitmapFactory.decodeByteArray(image, 0, image.length);
+    }
+
+    /**
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        mItemImageView = (ImageView) findViewById(R.id.detail_image);
-
-        if(requestCode == 1 && resultCode == RESULT_OK && data != null) {
-            mSelectedImage = data.getData();
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+            Uri mSelectedImage = data.getData();
             mItemImageBitmap = null;
 
             try {
@@ -338,6 +424,7 @@ public class DetailActivity extends AppCompatActivity implements
         int price = Integer.parseInt(priceString);
         String descriptionString = mDescriptionEditText.getText().toString().trim();
         String supplierString = mSupplierEditText.getText().toString().trim();
+        byte[] imageByteArray = imageToByte(mItemImageBitmap);
 
         ContentValues values = new ContentValues();
         values.put(InventoryEntry.NAME, nameString);
@@ -345,6 +432,7 @@ public class DetailActivity extends AppCompatActivity implements
         values.put(InventoryEntry.PRICE, price);
         values.put(InventoryEntry.DESCRIPTION, descriptionString);
         values.put(InventoryEntry.SUPPLIER, supplierString);
+        values.put(InventoryEntry.IMAGE, imageByteArray);
 
         Long rowId = ContentUris.parseId(mCurrentItemUri);
         String[] selectionArgs = {rowId.toString()};

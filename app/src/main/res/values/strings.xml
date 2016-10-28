@@ -1,9 +1,10 @@
 <resources>
     <string name="app_name">Inventory</string>
 
-    <!-- Formatted String for displaying quantity and price [CHAR LIMIT=0]-->
+    <!-- Formatted String for displaying quantity [CHAR LIMIT=0]-->
     <string name="number_message" translatable="false">%1$d</string>
 
+    <!-- Formatted String for displaying price with $ added [CHAR LIMIT=20] -->
     <string name="price_message" translatable="false">%1$d $</string>
 
     <!-- Detail Activity Title [CHAR LIMIT=20] -->
@@ -119,9 +120,17 @@
 
     <!-- [CHAR LIMIT=20] -->
     <string name="default_empty_image">Default Empty Image</string>
+
+    <!-- [CHAR LIMIT=20] -->
     <string name="insert_new_item">Insert New Item</string>
+
+    <!-- [CHAR LIMIT=20] -->
     <string name="insert_dummy_data">Insert Dummy Data</string>
+
+    <!-- [CHAR LIMIT=20] -->
     <string name="empty_set_image">Empty Set Image</string>
+
+    <!-- [CHAR LIMIT=20] -->
     <string name="add_picture">Add Picture</string>
 
     <!-- [CHAR LIMIT=20] -->

@@ -6,8 +6,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.android.inventory.Data.InventoryContract.InventoryEntry;
 
-import static android.R.attr.version;
-
 /**
  * Created by samue_000 on 10/9/2016.
  */
@@ -29,8 +27,8 @@ public class InventoryDbHelper extends SQLiteOpenHelper {
                 + InventoryEntry.PRICE + " INTEGER NOT NULL, "
                 + InventoryEntry.QUANTITY + " INTEGER NOT NULL DEFAULT 0, "
                 + InventoryEntry.DESCRIPTION + " TEXT NOT NULL, "
-                + InventoryEntry.SUPPLIER + " TEXT NOT NULL);";
-                //+ InventoryEntry.IMAGE + " BLOB);";
+                + InventoryEntry.SUPPLIER + " TEXT NOT NULL, "
+                + InventoryEntry.IMAGE + " BLOB);";
 
         sqLiteDatabase.execSQL(SQL_CREATE_INVENTORY_TABLE);
     }

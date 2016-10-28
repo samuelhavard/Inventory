@@ -57,7 +57,7 @@ public class InventoryProvider extends ContentProvider {
 
             case INVENTORY_ID:
                 selection = InventoryEntry._ID + "=?";
-                selectionArgs = new String[] {String.valueOf(ContentUris.parseId(uri))};
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
 
                 cursor = database.query(
                         InventoryEntry.TABLE_NAME,
@@ -155,7 +155,7 @@ public class InventoryProvider extends ContentProvider {
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
-        final  int match = sUriMatcher.match(uri);
+        final int match = sUriMatcher.match(uri);
         int rowsDeleted;
 
         switch (match) {
@@ -164,13 +164,13 @@ public class InventoryProvider extends ContentProvider {
                 break;
             case INVENTORY_ID:
                 selection = InventoryEntry._ID + "=?";
-                selectionArgs = new String[] {String.valueOf(ContentUris.parseId(uri))};
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 rowsDeleted = database.delete(InventoryEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);
         }
-        if (rowsDeleted !=0) {
+        if (rowsDeleted != 0) {
             if (getContext() != null) {
                 getContext().getContentResolver().notifyChange(uri, null);
             }
@@ -186,15 +186,15 @@ public class InventoryProvider extends ContentProvider {
                 return updateInventory(uri, contentValues, selection, selectionArgs);
             case INVENTORY_ID:
                 selection = InventoryEntry._ID + "=?";
-                selectionArgs = new String[] {String.valueOf(ContentUris.parseId(uri))};
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return updateInventory(uri, contentValues, selection, selectionArgs);
             default:
                 throw new IllegalArgumentException("Update is not supported for " + uri);
         }
     }
 
-    private int updateInventory (Uri uri, ContentValues contentValues, String selection,
-                                 String[] selectionArgs) {
+    private int updateInventory(Uri uri, ContentValues contentValues, String selection,
+                                String[] selectionArgs) {
         if (contentValues.containsKey(InventoryEntry.NAME)) {
             String name = contentValues.getAsString(InventoryEntry.NAME);
             if (name.isEmpty()) {
@@ -236,7 +236,7 @@ public class InventoryProvider extends ContentProvider {
                 selectionArgs);
 
         if (rowsUpdated != 0) {
-            if(getContext() != null) {
+            if (getContext() != null) {
                 getContext().getContentResolver().notifyChange(uri, null);
             }
         }

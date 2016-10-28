@@ -7,9 +7,9 @@
     tools:context="com.example.android.inventory.Activity.MainActivity">
 
     <ListView
+        android:id="@+id/activity_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/activity_main"/>
+        android:layout_height="match_parent" />
 
     <RelativeLayout
         android:id="@+id/empty_view"
@@ -18,20 +18,20 @@
         android:layout_centerInParent="true">
 
         <ImageView
-            android:contentDescription="@string/empty_set_image"
             android:id="@+id/empty_image_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:src="@drawable/transparent_empty_set_fotoflexer_photo"/>
+            android:contentDescription="@string/empty_set_image"
+            android:src="@drawable/transparent_empty_set_fotoflexer_photo" />
 
         <TextView
-            android:layout_below="@id/empty_image_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/empty_image_view"
             android:layout_centerHorizontal="true"
-            android:textSize="24sp"
-            android:text="@string/empty_set_text"/>
+            android:text="@string/empty_set_text"
+            android:textSize="24sp" />
     </RelativeLayout>
 
 </RelativeLayout>

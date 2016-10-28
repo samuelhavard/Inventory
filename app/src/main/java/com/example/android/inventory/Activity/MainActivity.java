@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.example.android.inventory.Adapter.InventoryCursorAdapter;
 import com.example.android.inventory.Data.InventoryContract.InventoryEntry;
 import com.example.android.inventory.R;
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_add_new_item:
                 newItem();
                 return true;
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void newItem () {
+    private void newItem() {
         Intent intent = new Intent(this, DetailActivity.class);
         startActivity(intent);
     }
