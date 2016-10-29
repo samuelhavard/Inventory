@@ -83,7 +83,9 @@ public class MainActivity extends AppCompatActivity
         mInventoryCursorAdapter.swapCursor(null);
     }
 
-
+    /**
+     *
+     */
     private void insertDummyData() {
 
         ContentValues values = new ContentValues();
@@ -123,6 +125,9 @@ public class MainActivity extends AppCompatActivity
         startActivity(intent);
     }
 
+    /**
+     *
+     */
     private void showDeleteConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.delete_all_items);
@@ -144,6 +149,9 @@ public class MainActivity extends AppCompatActivity
         alertDialog.show();
     }
 
+    /**
+     *
+     */
     private void deleteItem() {
         int rowsDeleted = getContentResolver().delete(InventoryEntry.CONTENT_URI, null, null);
         if (rowsDeleted > 0) {

@@ -43,9 +43,9 @@ public class DetailActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
 
-    /*
-    Declare all global variable to be used throughout the detail activity.
-     */
+
+    //Declare all global variable to be used throughout the detail activity.
+
     private static final int INVENTORY_LOADER = 0;
 
     private Uri mCurrentItemUri;
@@ -79,7 +79,6 @@ public class DetailActivity extends AppCompatActivity implements
      * buttons used in the DetailActivity class.  Additionally, it sets the on touch listener to
      * each field so the user can be prompted if they want to save the changes or abandon them.
      *
-     * @param savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -392,10 +391,11 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     /**
+     * onActivityResult is the data associated with selecting an image
      *
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     * @param requestCode is the code used to perform the request
+     * @param resultCode is the result code from the selection
+     * @param data is the data associated with the users selection.
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -418,7 +418,7 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     /**
-     *
+     * updateItem is a helper method used to update the item in the database
      */
     private void updateItem() {
         String nameString = mNameEditText.getText().toString().trim();
@@ -455,7 +455,7 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     /**
-     *
+     * quantityMinus is a helper method used to reduce the current stock of a selected item.
      */
     private void quantityMinus() {
         if (mQuantityEditText.getText().toString().isEmpty()) {
@@ -473,7 +473,7 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     /**
-     *
+     * quantityPlus is a helper method used to increase the current stock of a selected item.
      */
     private void quantityPlus() {
         if (mQuantityEditText.getText().toString().isEmpty()) {
@@ -487,9 +487,9 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     /**
+     * onOptionsItemSelected selects menu options
      *
-     * @param item
-     * @return
+     * @param item is the user selected menu item
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -513,7 +513,7 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     /**
-     *
+     * onBackPressed presents the user with a dialog if the user changed any setting for the item.
      */
     @Override
     public void onBackPressed() {
@@ -531,8 +531,9 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     /**
+     * showUnsavedChangesDialog is a helper method used to display a dialog to the user
      *
-     * @param discardButtonClickListener
+     * @param discardButtonClickListener is the result of the user click on the discard dialog
      */
     private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardButtonClickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
