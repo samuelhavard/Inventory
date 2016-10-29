@@ -109,29 +109,28 @@
     <!-- list_item name label text view [CHAR LIMIT=20] -->
     <string name="list_item_name_text_view">Name:</string>
 
-    <!-- [CHAR LIMIT=20] -->
+    <!-- list_item sale button[CHAR LIMIT=20] -->
     <string name="list_item_sale_button">Sale</string>
 
-    <!-- [CHAR LIMIT=20] -->
+    <!-- Empty set string [CHAR LIMIT=20] -->
     <string name="empty_set_text">It\'s Empty in here, add an Item</string>
 
-    <!-- [CHAR LIMIT=20] -->
+    <!-- order from supplier label [CHAR LIMIT=20] -->
     <string name="order_from_supplier">Order from Supplier</string>
 
-    <!-- [CHAR LIMIT=20] -->
+    <!-- content description for empty set image [CHAR LIMIT=20] -->
     <string name="default_empty_image">Default Empty Image</string>
 
-    <!-- [CHAR LIMIT=20] -->
+    <!-- insert new image label for menu [CHAR LIMIT=20] -->
     <string name="insert_new_item">Insert New Item</string>
 
-    <!-- [CHAR LIMIT=20] -->
+    <!-- insert dummy data for menu[CHAR LIMIT=20] -->
     <string name="insert_dummy_data">Insert Dummy Data</string>
 
-    <!-- [CHAR LIMIT=20] -->
+    <!-- content description for empty set [CHAR LIMIT=20] -->
     <string name="empty_set_image">Empty Set Image</string>
 
-    <!-- [CHAR LIMIT=20] -->
+    <!-- add picture label for button[CHAR LIMIT=20] -->
     <string name="add_picture">Add Picture</string>
 
-    <!-- [CHAR LIMIT=20] -->
 </resources>
