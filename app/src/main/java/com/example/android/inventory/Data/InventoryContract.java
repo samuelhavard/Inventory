@@ -5,7 +5,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
- * Created by samue_000 on 10/9/2016.
+ * {@link InventoryContract} is the contract used for accessing the database.
  */
 
 public class InventoryContract {

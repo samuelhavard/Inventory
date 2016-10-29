@@ -12,7 +12,8 @@ import android.support.annotation.NonNull;
 import com.example.android.inventory.Data.InventoryContract.InventoryEntry;
 
 /**
- *
+ * Content providers are one of the primary building blocks of Android applications, providing
+ * content to applications
  */
 
 public class InventoryProvider extends ContentProvider {
@@ -29,12 +30,33 @@ public class InventoryProvider extends ContentProvider {
         sUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_INVENTORY + "/#", INVENTORY_ID);
     }
 
+    /**
+     *
+     * @return true if the provider was successfully loaded, false otherwise
+     */
     @Override
     public boolean onCreate() {
         mDbHelper = new InventoryDbHelper(getContext());
         return true;
     }
 
+    /**
+     *
+     * @param uri The {@link Uri} to query. This will be the full URI sent by the client; if the client is
+     *            requesting a specific record, the URI will end in a record number that the
+     *            implementation should parse and add to a WHERE or HAVING clause, specifying
+     *            that _id value.
+     * @param projection The list of columns to put into the cursor. If null all columns are
+     *                   included.
+     * @param selection A selection criteria to apply when filtering rows. If null then all rows
+     *                  are included.
+     * @param selectionArgs May include ?s in selection, which will be replaced by the values
+     *                      from selectionArgs, in order that they appear in the selection.
+     *                      The values will be bound as Strings.
+     * @param sortOrder How the rows in the cursor should be sorted. If null then the provider is
+     *                  free to define the sort order.
+     * @return a {@link Cursor} or null.
+     */
     @Override
     public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
@@ -77,6 +99,11 @@ public class InventoryProvider extends ContentProvider {
         return cursor;
     }
 
+    /**
+     *
+     * @param uri he {@link Uri} to query.
+     * @return a MIME type string, or null if there is no type.
+     */
     @Override
     public String getType(@NonNull Uri uri) {
         final int match = sUriMatcher.match(uri);
@@ -90,6 +117,12 @@ public class InventoryProvider extends ContentProvider {
         }
     }
 
+    /**
+     *
+     * @param uri The content:// {@link Uri} of the insertion request. This must not be null.
+     * @param contentValues A set of column_name/value pairs to add to the database. This must not be null.
+     * @return The URI for the newly inserted item.
+     */
     @Override
     public Uri insert(@NonNull Uri uri, ContentValues contentValues) {
         final int match = sUriMatcher.match(uri);
@@ -101,6 +134,12 @@ public class InventoryProvider extends ContentProvider {
         }
     }
 
+    /**
+     *
+     * @param uri The content:// URI of the insertion request. This must not be null.
+     * @param values A set of column_name/value pairs to add to the database. This must not be null.
+     * @return The URI for the newly inserted item.
+     */
     private Uri insertInventory(Uri uri, ContentValues values) {
 
         if (values.containsKey(InventoryEntry.NAME)) {
@@ -152,6 +191,13 @@ public class InventoryProvider extends ContentProvider {
         return ContentUris.withAppendedId(uri, id);
     }
 
+    /**
+     *
+     * @param uri The full {@link Uri} to query, including a row ID (if a specific record is requested).
+     * @param selection An optional restriction to apply to rows when deleting.
+     * @param selectionArgs The selection arguments
+     * @return he number of rows affected.
+     */
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
@@ -178,6 +224,15 @@ public class InventoryProvider extends ContentProvider {
         return rowsDeleted;
     }
 
+    /**
+     *
+     * @param uri The {@link Uri} to query. This can potentially have a record ID if this is an
+     *            update request for a specific record.
+     * @param contentValues A set of column_name/value pairs to update in the database. This must not be null.
+     * @param selection An optional filter to match rows to update.
+     * @param selectionArgs Selection arguments
+     * @return the number of rows affected.
+     */
     @Override
     public int update(@NonNull Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
         final int matcher = sUriMatcher.match(uri);
@@ -193,6 +248,16 @@ public class InventoryProvider extends ContentProvider {
         }
     }
 
+    /**
+     * A helper method used to help update the database.
+     *
+     * @param uri The {@link Uri} to query. This can potentially have a record ID if this is an
+     *            update request for a specific record.
+     * @param contentValues A set of column_name/value pairs to update in the database. This must not be null.
+     * @param selection An optional filter to match rows to update.
+     * @param selectionArgs Selection arguments
+     * @return the number of rows affected.
+     */
     private int updateInventory(Uri uri, ContentValues contentValues, String selection,
                                 String[] selectionArgs) {
         if (contentValues.containsKey(InventoryEntry.NAME)) {

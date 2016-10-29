@@ -17,7 +17,7 @@ import com.example.android.inventory.Data.InventoryContract.InventoryEntry;
 import com.example.android.inventory.R;
 
 /**
- * Created by samue_000 on 10/9/2016.
+ * {@link InventoryCursorAdapter} extends {@link CursorAdapter}
  */
 
 public class InventoryCursorAdapter extends CursorAdapter {
@@ -26,11 +26,26 @@ public class InventoryCursorAdapter extends CursorAdapter {
         super(context, c, 0);
     }
 
+    /**
+     * Makes a new view to hold the data pointed to by cursor.
+     *
+     * @param context interface to application's global information
+     * @param cursor The cursor from which to get the data. The cursor is already moved to the correct position.
+     * @param parent The parent to which the new view is attached to
+     * @return the newly created view.
+     */
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         return LayoutInflater.from(context).inflate(R.layout.list_item, parent, false);
     }
 
+    /**
+     *
+     * @param view Existing view, returned earlier by newView
+     * @param context Interface to application's global information
+     * @param cursor The cursor from which to get the data. The cursor is already moved to the
+     *               correct position.
+     */
     @Override
     public void bindView(View view, final Context context, Cursor cursor) {
         TextView nameTextView = (TextView) view.findViewById(R.id.name);

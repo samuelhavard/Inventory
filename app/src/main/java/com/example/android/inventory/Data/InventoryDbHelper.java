@@ -7,7 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.android.inventory.Data.InventoryContract.InventoryEntry;
 
 /**
- * Created by samue_000 on 10/9/2016.
+ * {@link InventoryDbHelper} extends {@link SQLiteOpenHelper}
+ * Create a helper object to create, open, and/or manage a database.
  */
 
 public class InventoryDbHelper extends SQLiteOpenHelper {
