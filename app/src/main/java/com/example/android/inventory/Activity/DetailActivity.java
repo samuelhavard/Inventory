@@ -31,6 +31,8 @@ import com.example.android.inventory.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * {@link DetailActivity} shows the details of a selected item that is or was in inventory.
@@ -108,8 +110,8 @@ public class DetailActivity extends AppCompatActivity implements
             saveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    insertItem();
-                    finish();
+                        insertItem();
+                        finish();
                 }
             });
         } else {
@@ -186,6 +188,14 @@ public class DetailActivity extends AppCompatActivity implements
         mQuantityEditText.setOnTouchListener(mTouchListener);
         saleButton.setOnTouchListener(mTouchListener);
         shipmentButton.setOnTouchListener(mTouchListener);
+    }
+
+    private boolean inputValid(String check) {
+        String eMailPattern = "[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+
+        Pattern pattern = Pattern.compile(eMailPattern);
+        Matcher matcher = pattern.matcher(check);
+        return matcher.matches();
     }
 
     /**
@@ -339,6 +349,8 @@ public class DetailActivity extends AppCompatActivity implements
      * that information into the database.
      */
     private void insertItem() {
+
+
         String nameString = mNameEditText.getText().toString().trim();
         String quantityString = mQuantityEditText.getText().toString().trim();
         int quantity = Integer.parseInt(quantityString);
@@ -348,20 +360,24 @@ public class DetailActivity extends AppCompatActivity implements
         String supplierString = mSupplierEditText.getText().toString().trim();
         byte[] imageByteArray = imageToByte(mItemImageBitmap);
 
-        ContentValues values = new ContentValues();
-        values.put(InventoryEntry.NAME, nameString);
-        values.put(InventoryEntry.QUANTITY, quantity);
-        values.put(InventoryEntry.PRICE, price);
-        values.put(InventoryEntry.DESCRIPTION, descriptionString);
-        values.put(InventoryEntry.SUPPLIER, supplierString);
-        values.put(InventoryEntry.IMAGE, imageByteArray);
-
-        Uri newUri = getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
-
-        if (newUri == null) {
-            Toast.makeText(this, R.string.error_saving_item, Toast.LENGTH_LONG).show();
+        if(!inputValid(nameString) || nameString.isEmpty()) {
+            mNameEditText.setError("Invalid Name");
         } else {
-            Toast.makeText(this, R.string.item_saved, Toast.LENGTH_LONG).show();
+            ContentValues values = new ContentValues();
+            values.put(InventoryEntry.NAME, nameString);
+            values.put(InventoryEntry.QUANTITY, quantity);
+            values.put(InventoryEntry.PRICE, price);
+            values.put(InventoryEntry.DESCRIPTION, descriptionString);
+            values.put(InventoryEntry.SUPPLIER, supplierString);
+            values.put(InventoryEntry.IMAGE, imageByteArray);
+
+            Uri newUri = getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
+
+            if (newUri == null) {
+                Toast.makeText(this, R.string.error_saving_item, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, R.string.item_saved, Toast.LENGTH_LONG).show();
+            }
         }
     }
 
