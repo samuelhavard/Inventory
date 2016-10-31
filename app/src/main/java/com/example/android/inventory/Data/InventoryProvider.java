@@ -260,12 +260,12 @@ public class InventoryProvider extends ContentProvider {
      */
     private int updateInventory(Uri uri, ContentValues contentValues, String selection,
                                 String[] selectionArgs) {
-        if (contentValues.containsKey(InventoryEntry.NAME)) {
-            String name = contentValues.getAsString(InventoryEntry.NAME);
-            if (name.isEmpty()) {
-                throw new IllegalArgumentException("Item requires a name");
-            }
-        }
+//        if (contentValues.containsKey(InventoryEntry.NAME)) {
+//            String name = contentValues.getAsString(InventoryEntry.NAME);
+//            if (name.isEmpty()) {
+//                throw new IllegalArgumentException("Item requires a name");
+//            }
+//        }
 
         if (contentValues.containsKey(InventoryEntry.QUANTITY)) {
             Integer quantity = contentValues.getAsInteger(InventoryEntry.QUANTITY);

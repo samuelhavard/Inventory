@@ -76,6 +76,8 @@ public class DetailActivity extends AppCompatActivity implements
 
     private final int REQUEST_CODE_ASK_PERMISSIONS = 123;
 
+    private boolean mUpdateComplete;
+
     /**
      * onCreate initializes all global variables to be used and sets on click listeners to the
      * buttons used in the DetailActivity class.  Additionally, it sets the on touch listener to
@@ -120,7 +122,9 @@ public class DetailActivity extends AppCompatActivity implements
                 @Override
                 public void onClick(View view) {
                     updateItem();
-                    finish();
+                    if (mUpdateComplete) {
+                        finish();
+                    }
                 }
             });
         }
@@ -288,8 +292,8 @@ public class DetailActivity extends AppCompatActivity implements
             mQuantityEditText.setText(getString(R.string.number_message, itemQuantity));
 
             if (imageArray != null) {
-                Bitmap image = byteToImage(imageArray);
-                mItemImageView.setImageBitmap(image);
+                mItemImageBitmap = byteToImage(imageArray);
+                mItemImageView.setImageBitmap(mItemImageBitmap);
             }
         }
     }
@@ -349,8 +353,6 @@ public class DetailActivity extends AppCompatActivity implements
      * that information into the database.
      */
     private void insertItem() {
-
-
         String nameString = mNameEditText.getText().toString().trim();
         String quantityString = mQuantityEditText.getText().toString().trim();
         int quantity = Integer.parseInt(quantityString);
@@ -358,8 +360,12 @@ public class DetailActivity extends AppCompatActivity implements
         int price = Integer.parseInt(priceString);
         String descriptionString = mDescriptionEditText.getText().toString().trim();
         String supplierString = mSupplierEditText.getText().toString().trim();
-        byte[] imageByteArray = imageToByte(mItemImageBitmap);
-
+        byte[] imageByteArray;
+        if(mItemImageBitmap != null) {
+            imageByteArray = imageToByte(mItemImageBitmap);
+        } else {
+            imageByteArray = null;
+        }
         if(!inputValid(nameString) || nameString.isEmpty()) {
             mNameEditText.setError("Invalid Name");
         } else {
@@ -439,34 +445,80 @@ public class DetailActivity extends AppCompatActivity implements
     private void updateItem() {
         String nameString = mNameEditText.getText().toString().trim();
         String quantityString = mQuantityEditText.getText().toString().trim();
-        int quantity = Integer.parseInt(quantityString);
+        int quantity = 0;
         String priceString = mPriceEditText.getText().toString().trim();
-        int price = Integer.parseInt(priceString);
+        int price = 0;
         String descriptionString = mDescriptionEditText.getText().toString().trim();
         String supplierString = mSupplierEditText.getText().toString().trim();
         byte[] imageByteArray = imageToByte(mItemImageBitmap);
 
-        ContentValues values = new ContentValues();
-        values.put(InventoryEntry.NAME, nameString);
-        values.put(InventoryEntry.QUANTITY, quantity);
-        values.put(InventoryEntry.PRICE, price);
-        values.put(InventoryEntry.DESCRIPTION, descriptionString);
-        values.put(InventoryEntry.SUPPLIER, supplierString);
-        values.put(InventoryEntry.IMAGE, imageByteArray);
+        boolean nameComplete = false;
+        boolean descriptionComplete = false;
+        boolean supplierComplete = false;
+        boolean priceComplete = false;
+        boolean quantityComplete = false;
 
-        Long rowId = ContentUris.parseId(mCurrentItemUri);
-        String[] selectionArgs = {rowId.toString()};
-
-        int updatedRows = getContentResolver().update(
-                mCurrentItemUri,
-                values,
-                InventoryEntry._ID,
-                selectionArgs);
-
-        if (updatedRows < 0) {
-            Toast.makeText(this, R.string.update_not_completed, Toast.LENGTH_LONG).show();
+        if(nameString.isEmpty()) {
+            mUpdateComplete = false;
+            mNameEditText.setError("Invalid Name");
         } else {
-            Toast.makeText(this, R.string.update_completed, Toast.LENGTH_LONG).show();
+            nameComplete = true;
+        }
+
+        if (descriptionString.isEmpty()) {
+            mUpdateComplete = false;
+            mDescriptionEditText.setError("Invalid Description");
+        } else {
+            descriptionComplete = true;
+        }
+
+        if (supplierString.isEmpty()) {
+            mUpdateComplete = false;
+            mSupplierEditText.setError("Invalid Supplier");
+        } else {
+            supplierComplete = true;
+        }
+
+        if (priceString.isEmpty()) {
+            mUpdateComplete = false;
+            mPriceEditText.setError("Invalid Price");
+        } else {
+            price = Integer.parseInt(priceString);
+            priceComplete = true;
+        }
+
+        if (quantityString.isEmpty()) {
+            mUpdateComplete = false;
+            mQuantityEditText.setError("Invalid Quantity");
+        } else {
+            quantity = Integer.parseInt(quantityString);
+            quantityComplete = true;
+        }
+
+        if(nameComplete && descriptionComplete && supplierComplete && priceComplete && quantityComplete) {
+            mUpdateComplete = true;
+            ContentValues values = new ContentValues();
+            values.put(InventoryEntry.NAME, nameString);
+            values.put(InventoryEntry.QUANTITY, quantity);
+            values.put(InventoryEntry.PRICE, price);
+            values.put(InventoryEntry.DESCRIPTION, descriptionString);
+            values.put(InventoryEntry.SUPPLIER, supplierString);
+            values.put(InventoryEntry.IMAGE, imageByteArray);
+
+            Long rowId = ContentUris.parseId(mCurrentItemUri);
+            String[] selectionArgs = {rowId.toString()};
+
+            int updatedRows = getContentResolver().update(
+                    mCurrentItemUri,
+                    values,
+                    InventoryEntry._ID,
+                    selectionArgs);
+
+            if (updatedRows < 0) {
+                Toast.makeText(this, R.string.update_not_completed, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, R.string.update_completed, Toast.LENGTH_LONG).show();
+            }
         }
     }
 
