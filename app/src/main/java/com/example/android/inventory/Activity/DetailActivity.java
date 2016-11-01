@@ -32,8 +32,6 @@ import com.example.android.inventory.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * {@link DetailActivity} shows the details of a selected item that is or was in inventory.
@@ -70,8 +68,6 @@ public class DetailActivity extends AppCompatActivity implements
     private EditText mQuantityEditText;
 
     private ImageView mItemImageView;
-
-    private String mSupplier;
 
     private Bitmap mItemImageBitmap;
 
@@ -174,16 +170,26 @@ public class DetailActivity extends AppCompatActivity implements
         orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_SENDTO);
-                intent.setData(Uri.parse("mailto:"));
-                intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_EMAIL, mSupplierEditText.getText().toString());
-                intent.putExtra(Intent.EXTRA_SUBJECT, "Need new shipment");
-                try {
-                    startActivity(Intent.createChooser(intent, "Send mail..."));
-                    finish();
-                } catch (android.content.ActivityNotFoundException e) {
-                    Toast.makeText(DetailActivity.this, "There is no email client installed", Toast.LENGTH_SHORT).show();
+
+                if (!mSupplierEditText.getText().toString().isEmpty()) {
+                    if (inputValid(mSupplierEditText.getText().toString())) {
+                        Intent intent = new Intent(Intent.ACTION_SENDTO);
+                        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+                        intent.putExtra(Intent.EXTRA_EMAIL,
+                                new String[]{mSupplierEditText.getText().toString()});
+                        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject));
+                        intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.email_text_body));
+
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+
+                            startActivity(Intent.createChooser(intent, getString(R.string.send_mail)));
+                            finish();
+                        }
+                    } else {
+                        mSupplierEditText.setError(getString(R.string.valid_email_string));
+                    }
+                } else {
+                    mSupplierEditText.setError(getString(R.string.enter_suppier_email));
                 }
             }
         });
@@ -199,11 +205,6 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     private boolean inputValid(String check) {
-//        String eMailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-//
-//        Pattern pattern = Pattern.compile(eMailPattern);
-//        Matcher matcher = pattern.matcher(check);
-//        return matcher.matches();
         return Patterns.EMAIL_ADDRESS.matcher(check).matches();
     }
 
@@ -222,7 +223,7 @@ public class DetailActivity extends AppCompatActivity implements
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getImage();
                 } else {
-                    Toast.makeText(this, "Access Denied", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.access_denied, Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
@@ -284,7 +285,7 @@ public class DetailActivity extends AppCompatActivity implements
 
             String name = cursor.getString(nameColumnIndex);
             String description = cursor.getString(descriptionColumnIndex);
-            mSupplier = cursor.getString(supplierColumnIndex);
+            String mSupplier = cursor.getString(supplierColumnIndex);
             Integer itemPrice = cursor.getInt(priceColumnIndex);
             Integer itemQuantity = cursor.getInt(quantityColumnIndex);
 
@@ -380,28 +381,28 @@ public class DetailActivity extends AppCompatActivity implements
 
         if(nameString.isEmpty()) {
             mUpdateComplete = false;
-            mNameEditText.setError("Invalid Name");
+            mNameEditText.setError(getString(R.string.invalid_name));
         } else {
             nameComplete = true;
         }
 
         if (descriptionString.isEmpty()) {
             mUpdateComplete = false;
-            mDescriptionEditText.setError("Invalid Description");
+            mDescriptionEditText.setError(getString(R.string.invalid_description));
         } else {
             descriptionComplete = true;
         }
 
         if (!inputValid(supplierString) || supplierString.isEmpty()) {
             mUpdateComplete = false;
-            mSupplierEditText.setError("ex: Example@inventory.com");
+            mSupplierEditText.setError(getString(R.string.valid_email_string));
         } else {
             supplierComplete = true;
         }
 
         if (priceString.isEmpty()) {
             mUpdateComplete = false;
-            mPriceEditText.setError("Invalid Price");
+            mPriceEditText.setError(getString(R.string.invalid_price));
         } else {
             price = Integer.parseInt(priceString);
             priceComplete = true;
@@ -409,7 +410,7 @@ public class DetailActivity extends AppCompatActivity implements
 
         if (quantityString.isEmpty()) {
             mUpdateComplete = false;
-            mQuantityEditText.setError("Invalid Quantity");
+            mQuantityEditText.setError(getString(R.string.invalid_quantity));
         } else {
             quantity = Integer.parseInt(quantityString);
             quantityComplete = true;
@@ -513,28 +514,28 @@ public class DetailActivity extends AppCompatActivity implements
 
         if(nameString.isEmpty()) {
             mUpdateComplete = false;
-            mNameEditText.setError("Invalid Name");
+            mNameEditText.setError(getString(R.string.invalid_name));
         } else {
             nameComplete = true;
         }
 
         if (descriptionString.isEmpty()) {
             mUpdateComplete = false;
-            mDescriptionEditText.setError("Invalid Description");
+            mDescriptionEditText.setError(getString(R.string.invalid_description));
         } else {
             descriptionComplete = true;
         }
 
         if (!inputValid(supplierString) || supplierString.isEmpty()) {
             mUpdateComplete = false;
-            mSupplierEditText.setError("ex: Example@inventory.com");
+            mSupplierEditText.setError(getString(R.string.valid_email_string));
         } else {
             supplierComplete = true;
         }
 
         if (priceString.isEmpty()) {
             mUpdateComplete = false;
-            mPriceEditText.setError("Invalid Price");
+            mPriceEditText.setError(getString(R.string.invalid_price));
         } else {
             price = Integer.parseInt(priceString);
             priceComplete = true;
@@ -542,7 +543,7 @@ public class DetailActivity extends AppCompatActivity implements
 
         if (quantityString.isEmpty()) {
             mUpdateComplete = false;
-            mQuantityEditText.setError("Invalid Quantity");
+            mQuantityEditText.setError(getString(R.string.invalid_quantity));
         } else {
             quantity = Integer.parseInt(quantityString);
             quantityComplete = true;

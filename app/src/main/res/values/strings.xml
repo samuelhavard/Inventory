@@ -132,5 +132,15 @@
 
     <!-- add picture label for button[CHAR LIMIT=20] -->
     <string name="add_picture">Add Picture</string>
+    <string name="valid_email_string">ex: Example@inventory.com</string>
+    <string name="enter_suppier_email">To order, enter a supplier email.</string>
+    <string name="send_mail">Send Mail...</string>
+    <string name="email_subject">New shipment needed.</string>
+    <string name="email_text_body">Please send a new shipment ASAP</string>
+    <string name="access_denied">Access Denied</string>
+    <string name="invalid_name">Invalid Name</string>
+    <string name="invalid_description">Invalid Description</string>
+    <string name="invalid_price">Invalid Price</string>
+    <string name="invalid_quantity">Invalid Quantity</string>
 
 </resources>
