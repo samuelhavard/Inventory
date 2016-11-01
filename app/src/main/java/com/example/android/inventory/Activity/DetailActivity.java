@@ -18,6 +18,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Patterns;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -113,7 +114,9 @@ public class DetailActivity extends AppCompatActivity implements
                 @Override
                 public void onClick(View view) {
                         insertItem();
+                    if(mUpdateComplete) {
                         finish();
+                    }
                 }
             });
         } else {
@@ -171,16 +174,17 @@ public class DetailActivity extends AppCompatActivity implements
         orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Uri orderUri;
-                if (!mSupplier.startsWith("https://") && !mSupplier.startsWith("http://")) {
-                    String url = "http://" + mSupplier;
-                    orderUri = Uri.parse(url);
-                } else {
-                    orderUri = Uri.parse(mSupplier);
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("mailto:"));
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_EMAIL, mSupplierEditText.getText().toString());
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Need new shipment");
+                try {
+                    startActivity(Intent.createChooser(intent, "Send mail..."));
+                    finish();
+                } catch (android.content.ActivityNotFoundException e) {
+                    Toast.makeText(DetailActivity.this, "There is no email client installed", Toast.LENGTH_SHORT).show();
                 }
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(orderUri);
-                startActivity(intent);
             }
         });
 
@@ -195,11 +199,12 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     private boolean inputValid(String check) {
-        String eMailPattern = "[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-
-        Pattern pattern = Pattern.compile(eMailPattern);
-        Matcher matcher = pattern.matcher(check);
-        return matcher.matches();
+//        String eMailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+//
+//        Pattern pattern = Pattern.compile(eMailPattern);
+//        Matcher matcher = pattern.matcher(check);
+//        return matcher.matches();
+        return Patterns.EMAIL_ADDRESS.matcher(check).matches();
     }
 
     /**
@@ -355,9 +360,9 @@ public class DetailActivity extends AppCompatActivity implements
     private void insertItem() {
         String nameString = mNameEditText.getText().toString().trim();
         String quantityString = mQuantityEditText.getText().toString().trim();
-        int quantity = Integer.parseInt(quantityString);
+        int quantity = 0;
         String priceString = mPriceEditText.getText().toString().trim();
-        int price = Integer.parseInt(priceString);
+        int price = 0;
         String descriptionString = mDescriptionEditText.getText().toString().trim();
         String supplierString = mSupplierEditText.getText().toString().trim();
         byte[] imageByteArray;
@@ -366,9 +371,52 @@ public class DetailActivity extends AppCompatActivity implements
         } else {
             imageByteArray = null;
         }
-        if(!inputValid(nameString) || nameString.isEmpty()) {
+
+        boolean nameComplete = false;
+        boolean descriptionComplete = false;
+        boolean supplierComplete = false;
+        boolean priceComplete = false;
+        boolean quantityComplete = false;
+
+        if(nameString.isEmpty()) {
+            mUpdateComplete = false;
             mNameEditText.setError("Invalid Name");
         } else {
+            nameComplete = true;
+        }
+
+        if (descriptionString.isEmpty()) {
+            mUpdateComplete = false;
+            mDescriptionEditText.setError("Invalid Description");
+        } else {
+            descriptionComplete = true;
+        }
+
+        if (!inputValid(supplierString) || supplierString.isEmpty()) {
+            mUpdateComplete = false;
+            mSupplierEditText.setError("ex: Example@inventory.com");
+        } else {
+            supplierComplete = true;
+        }
+
+        if (priceString.isEmpty()) {
+            mUpdateComplete = false;
+            mPriceEditText.setError("Invalid Price");
+        } else {
+            price = Integer.parseInt(priceString);
+            priceComplete = true;
+        }
+
+        if (quantityString.isEmpty()) {
+            mUpdateComplete = false;
+            mQuantityEditText.setError("Invalid Quantity");
+        } else {
+            quantity = Integer.parseInt(quantityString);
+            quantityComplete = true;
+        }
+
+        if(nameComplete && descriptionComplete && supplierComplete && priceComplete && quantityComplete) {
+            mUpdateComplete = true;
             ContentValues values = new ContentValues();
             values.put(InventoryEntry.NAME, nameString);
             values.put(InventoryEntry.QUANTITY, quantity);
@@ -450,7 +498,12 @@ public class DetailActivity extends AppCompatActivity implements
         int price = 0;
         String descriptionString = mDescriptionEditText.getText().toString().trim();
         String supplierString = mSupplierEditText.getText().toString().trim();
-        byte[] imageByteArray = imageToByte(mItemImageBitmap);
+        byte[] imageByteArray;
+        if(mItemImageBitmap != null) {
+            imageByteArray = imageToByte(mItemImageBitmap);
+        } else {
+            imageByteArray = null;
+        }
 
         boolean nameComplete = false;
         boolean descriptionComplete = false;
@@ -472,9 +525,9 @@ public class DetailActivity extends AppCompatActivity implements
             descriptionComplete = true;
         }
 
-        if (supplierString.isEmpty()) {
+        if (!inputValid(supplierString) || supplierString.isEmpty()) {
             mUpdateComplete = false;
-            mSupplierEditText.setError("Invalid Supplier");
+            mSupplierEditText.setError("ex: Example@inventory.com");
         } else {
             supplierComplete = true;
         }
@@ -567,7 +620,6 @@ public class DetailActivity extends AppCompatActivity implements
                     NavUtils.navigateUpFromSameTask(this);
                     return true;
                 }
-
                 DialogInterface.OnClickListener discardButtonClickListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

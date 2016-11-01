@@ -62,7 +62,7 @@
     <string name="price">Price:</string>
 
     <!-- Item Supplier EditText hint [CHAR LIMIT=20] -->
-    <string name="item_supplier">Item Supplier</string>
+    <string name="item_supplier">Item Supplier\'s Email</string>
 
     <!-- Supplier TextView label [CHAR LIMIT=20] -->
     <string name="supplier">Supplier:</string>
