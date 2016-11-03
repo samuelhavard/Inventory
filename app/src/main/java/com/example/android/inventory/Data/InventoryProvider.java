@@ -142,40 +142,40 @@ public class InventoryProvider extends ContentProvider {
      */
     private Uri insertInventory(Uri uri, ContentValues values) {
 
-        if (values.containsKey(InventoryEntry.NAME)) {
-            String name = values.getAsString(InventoryEntry.NAME);
-            if (name == null) {
-                throw new IllegalArgumentException("Item requires a name");
-            }
-        }
-
-        if (values.containsKey(InventoryEntry.QUANTITY)) {
-            Integer quantity = values.getAsInteger(InventoryEntry.QUANTITY);
-            if (quantity != null && quantity < 0) {
-                throw new IllegalArgumentException("Item requires a valid quantity");
-            }
-        }
-
-        if (values.containsKey(InventoryEntry.PRICE)) {
-            Integer price = values.getAsInteger(InventoryEntry.PRICE);
-            if (price != null && price < 0) {
-                throw new IllegalArgumentException("Item requires a valid price");
-            }
-        }
-
-        if (values.containsKey(InventoryEntry.DESCRIPTION)) {
-            String description = values.getAsString(InventoryEntry.DESCRIPTION);
-            if (description == null) {
-                throw new IllegalArgumentException("Item requires a valid description");
-            }
-        }
-
-        if (values.containsKey(InventoryEntry.SUPPLIER)) {
-            String supplier = values.getAsString(InventoryEntry.SUPPLIER);
-            if (supplier == null) {
-                throw new IllegalArgumentException("Item requires a valid supplier");
-            }
-        }
+//        if (values.containsKey(InventoryEntry.NAME)) {
+//            String name = values.getAsString(InventoryEntry.NAME);
+//            if (name == null) {
+//                throw new IllegalArgumentException("Item requires a name");
+//            }
+//        }
+//
+//        if (values.containsKey(InventoryEntry.QUANTITY)) {
+//            Integer quantity = values.getAsInteger(InventoryEntry.QUANTITY);
+//            if (quantity != null && quantity < 0) {
+//                throw new IllegalArgumentException("Item requires a valid quantity");
+//            }
+//        }
+//
+//        if (values.containsKey(InventoryEntry.PRICE)) {
+//            Integer price = values.getAsInteger(InventoryEntry.PRICE);
+//            if (price != null && price < 0) {
+//                throw new IllegalArgumentException("Item requires a valid price");
+//            }
+//        }
+//
+//        if (values.containsKey(InventoryEntry.DESCRIPTION)) {
+//            String description = values.getAsString(InventoryEntry.DESCRIPTION);
+//            if (description == null) {
+//                throw new IllegalArgumentException("Item requires a valid description");
+//            }
+//        }
+//
+//        if (values.containsKey(InventoryEntry.SUPPLIER)) {
+//            String supplier = values.getAsString(InventoryEntry.SUPPLIER);
+//            if (supplier == null) {
+//                throw new IllegalArgumentException("Item requires a valid supplier");
+//            }
+//        }
 
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
@@ -260,40 +260,40 @@ public class InventoryProvider extends ContentProvider {
      */
     private int updateInventory(Uri uri, ContentValues contentValues, String selection,
                                 String[] selectionArgs) {
-        if (contentValues.containsKey(InventoryEntry.NAME)) {
-            String name = contentValues.getAsString(InventoryEntry.NAME);
-            if (name.isEmpty()) {
-                throw new IllegalArgumentException("Item requires a name");
-            }
-        }
-
-        if (contentValues.containsKey(InventoryEntry.QUANTITY)) {
-            Integer quantity = contentValues.getAsInteger(InventoryEntry.QUANTITY);
-            if (quantity != null && quantity < 0) {
-                throw new IllegalArgumentException("Item requires a quantity");
-            }
-        }
-
-        if (contentValues.containsKey(InventoryEntry.PRICE)) {
-            Integer price = contentValues.getAsInteger(InventoryEntry.PRICE);
-            if (price != null && price < 0) {
-                throw new IllegalArgumentException("Item requires a price");
-            }
-        }
-
-        if (contentValues.containsKey(InventoryEntry.DESCRIPTION)) {
-            String description = contentValues.getAsString(InventoryEntry.DESCRIPTION);
-            if (description == null) {
-                throw new IllegalArgumentException("Item requires a description");
-            }
-        }
-
-        if (contentValues.containsKey(InventoryEntry.SUPPLIER)) {
-            String supplier = contentValues.getAsString(InventoryEntry.SUPPLIER);
-            if (supplier == null) {
-                throw new IllegalArgumentException("Item needs a supplier.");
-            }
-        }
+//        if (contentValues.containsKey(InventoryEntry.NAME)) {
+//            String name = contentValues.getAsString(InventoryEntry.NAME);
+//            if (name.isEmpty()) {
+//                throw new IllegalArgumentException("Item requires a name");
+//            }
+//        }
+//
+//        if (contentValues.containsKey(InventoryEntry.QUANTITY)) {
+//            Integer quantity = contentValues.getAsInteger(InventoryEntry.QUANTITY);
+//            if (quantity != null && quantity < 0) {
+//                throw new IllegalArgumentException("Item requires a quantity");
+//            }
+//        }
+//
+//        if (contentValues.containsKey(InventoryEntry.PRICE)) {
+//            Integer price = contentValues.getAsInteger(InventoryEntry.PRICE);
+//            if (price != null && price < 0) {
+//                throw new IllegalArgumentException("Item requires a price");
+//            }
+//        }
+//
+//        if (contentValues.containsKey(InventoryEntry.DESCRIPTION)) {
+//            String description = contentValues.getAsString(InventoryEntry.DESCRIPTION);
+//            if (description == null) {
+//                throw new IllegalArgumentException("Item requires a description");
+//            }
+//        }
+//
+//        if (contentValues.containsKey(InventoryEntry.SUPPLIER)) {
+//            String supplier = contentValues.getAsString(InventoryEntry.SUPPLIER);
+//            if (supplier == null) {
+//                throw new IllegalArgumentException("Item needs a supplier.");
+//            }
+//        }
 
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
